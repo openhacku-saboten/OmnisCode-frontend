@@ -1,4 +1,4 @@
-# OmnisCode-frontent
+# OmnisCode-frontend
 
 開発するには以下をぶっ叩く！
 ```bash
