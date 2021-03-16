@@ -1,7 +1,7 @@
 ---
 name: 仕様変更
 about: 仕様変更するとき
-title: '[<見出し>] '
+title: '[<見出し>]'
 labels: 'change'
 assignees: ''
 
