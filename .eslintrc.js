@@ -48,7 +48,10 @@ module.exports = {
           },
         ],
 
-        'prettier/prettier': ['error', {}, { usePrettierrc: true }], // Includes .prettierrc.js rules
+        'prettier/prettier': ['error', {
+           usePrettierrc: true, 
+           "endOfLine":"auto",
+          }], // Includes .prettierrc.js rules
       },
     },
   ],
