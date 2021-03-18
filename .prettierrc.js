@@ -9,5 +9,4 @@ module.exports = {
   useTabs: false,
   jsxBracketSameLine: true,
   bracketSpacing: true,
-  endOfLine: "auto",
 }
