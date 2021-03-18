@@ -50,7 +50,7 @@ module.exports = {
 
         'prettier/prettier': ['error', {
            usePrettierrc: true, 
-           "endOfLine":"auto",
+           "endOfLine":"auto"
           }], // Includes .prettierrc.js rules
       },
     },
