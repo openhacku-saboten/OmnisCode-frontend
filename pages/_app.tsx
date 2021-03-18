@@ -4,20 +4,17 @@ import '../styles/globals.css';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../src/theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { AppBar, Toolbar, Typography, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Grid,
+  Container,
+} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
-  const useStyles = makeStyles({
-    root: {
-      position: 'fixed',
-      bottom: 0,
-      width: '100%',
-    },
-  });
-  const classes = useStyles();
   return (
     <>
       <AppBar position="static">
@@ -44,6 +41,20 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
           <Component {...pageProps} />
         </CssBaseline>
       </ThemeProvider>
+      <footer>
+        <Container maxWidth="lg">
+          <Typography variant="h6" align="center" gutterBottom>
+            OmnisCode
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="textSecondary"
+            component="p">
+            Copyright © 2021 OmnisCode All Rights Reserved.
+          </Typography>
+        </Container>
+      </footer>
     </>
   );
 };
