@@ -30,8 +30,8 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               color="inherit">
-              <p style={{ fontSize: 'small' }}>UserName</p>
-              <AccountCircle fontSize="large" />
+              <AccountCircle fontSize="large" style={{ marginRight: '10px' }} />
+              <p style={{ fontSize: 'medium' }}>UserName</p>
             </IconButton>
           </Grid>
         </Toolbar>
@@ -41,7 +41,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
           <Component {...pageProps} />
         </CssBaseline>
       </ThemeProvider>
-      <footer>
+      <footer style={{ marginBottom: '20px' }}>
         <Container maxWidth="lg">
           <Typography variant="h6" align="center" gutterBottom>
             OmnisCode
