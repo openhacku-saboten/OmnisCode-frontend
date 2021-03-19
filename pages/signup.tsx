@@ -20,8 +20,12 @@ const Home: NextPage = () => {
           content="OmnisCode | コードを共有するSNS"
         />
       </Head>
-      <Grid container alignItems="center" justify="center">
-        <Grid item xs={5}>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ marginTop: '60px', marginBottom: '60px' }}>
+        <Grid item sm={5}>
           <h1>プロフィール入力ページ</h1>
           <h3>新規登録ありがとうございます。</h3>
           <p>このサイトで表示する名前を入力してください。</p>
