@@ -15,11 +15,11 @@ const Home: NextPage = () => {
   const [pageNum, setPageNum] = useState(1);
 
   // dummy posts
-  const posts = [...Array(5)].map((_, idx) => ({
+  const posts = [...Array(100)].map((_, idx) => ({
     user_id: `user_id${('000' + (idx + 1)).slice(-3)}`,
     title:
       `AGC${('000' + (idx + 1)).slice(-3)}のF問題が通りません` +
-      'ん'.repeat(idx * 5),
+      'ん'.repeat(idx),
     code: `#include <bits/stdc++.h>\nusing namespace std;\n#define int long long\n\nsigned main() {\n    cout << ${
       idx + 1
     } << endl;\n}`,
