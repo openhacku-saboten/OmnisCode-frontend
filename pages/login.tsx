@@ -1,7 +1,14 @@
-import { Card, CardContent, Typography } from '@material-ui/core';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { NextPage } from 'next';
 import React from 'react';
+import TwitterIcon from '@material-ui/icons/Twitter';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -25,6 +32,16 @@ const useStyles = makeStyles(() =>
       color: '#77838c',
       margin: 24,
     },
+    button: {
+      backgroundColor: '#00acee',
+      fontWeight: 'bold',
+      color: '#ffffff',
+      padding: 16,
+    },
+    buttonWrapper: {
+      justifyContent: 'center',
+      margin: 16,
+    },
   })
 );
 
@@ -41,6 +58,13 @@ const Login: NextPage = () => {
           OmnisCodeは簡単にコードを共有できるプラットフォームです。ログインして始めましょう。
         </Typography>
       </CardContent>
+      <CardActions className={styles.buttonWrapper}>
+        <Button className={styles.button}>
+          <TwitterIcon />
+          <span />
+          Login with Twitter
+        </Button>
+      </CardActions>
     </Card>
   );
 };
