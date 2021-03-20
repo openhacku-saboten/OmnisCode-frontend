@@ -10,6 +10,11 @@ const useStyles = makeStyles(() =>
       height: 512,
       color: '#404040',
       padding: 24,
+      display: 'flex',
+      flexFlow: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlign: 'center',
     },
     name: {
       fontSize: 48,
