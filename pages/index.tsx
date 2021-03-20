@@ -37,40 +37,13 @@ const Home: NextPage = () => {
     setPageNum(value);
   };
 
-  // 各ページのグリッドを返す
-  const cardGrid = (posts) => {
-    const grid = [];
-    for (let i = 0; i < Math.floor(cardsPerPage / cardsPerRow); ++i) {
-      const row = [];
-      for (let j = 0; j < cardsPerRow; ++j) {
-        const idx = i * cardsPerRow + j;
-        if (idx < posts.length) {
-          row.push(
-            <Grid item xs={12} md={6} key={idx}>
-              <PostCard
-                user_id={posts[idx].user_id}
-                title={posts[idx].title}
-                code={posts[idx].code}
-                language={posts[idx].language}
-                content={posts[idx].content}
-                source={posts[idx].source}
-              />
-            </Grid>
-          );
-        }
-      }
-      if (row.length > 0) {
-        grid.push(
-          <Grid item xs={12} key={i}>
-            <Grid container spacing={3}>
-              {row}
-            </Grid>
-          </Grid>
-        );
-      }
-    }
-    return grid;
-  };
+  // 配列をsize個ずつに分ける
+  const chunk = <T extends unknown>(arr: T[], size: number): T[][] =>
+    arr.reduce(
+      (newarr, _, i) =>
+        i % size ? newarr : [...newarr, arr.slice(i, i + size)],
+      [] as T[][]
+    );
 
   return (
     <Box m={4}>
@@ -88,9 +61,27 @@ const Home: NextPage = () => {
           />
         </Box>
         <Grid container spacing={3} style={{ marginTop: '10px' }}>
-          {cardGrid(
-            posts.slice(cardsPerPage * (pageNum - 1), cardsPerPage * pageNum)
-          )}
+          {chunk(
+            posts.slice(cardsPerPage * (pageNum - 1), cardsPerPage * pageNum),
+            cardsPerRow
+          ).map((row, idx_i) => (
+            <Grid item xs={12} key={idx_i}>
+              <Grid container spacing={3}>
+                {row.map((post, idx_j) => (
+                  <Grid item xs={12} md={6} key={idx_j}>
+                    <PostCard
+                      user_id={post.user_id}
+                      title={post.title}
+                      code={post.code}
+                      language={post.language}
+                      content={post.content}
+                      source={post.source}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          ))}
         </Grid>
       </Container>
     </Box>
