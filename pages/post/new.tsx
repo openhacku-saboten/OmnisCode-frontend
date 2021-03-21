@@ -12,7 +12,7 @@ import Select from '@material-ui/core/Select';
 
 import { langs } from '../../utils/language';
 
-const Home: NextPage = () => {
+const PostNew: NextPage = () => {
   //プルダウンメニュー(言語)
   const [language, setLanguage] = React.useState('cpp');
 
@@ -177,4 +177,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default PostNew;
