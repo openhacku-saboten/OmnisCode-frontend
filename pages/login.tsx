@@ -3,6 +3,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Theme,
   Typography,
 } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
@@ -10,7 +11,7 @@ import { NextPage } from 'next';
 import React from 'react';
 import TwitterIcon from '@material-ui/icons/Twitter';
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
       margin: 64,
@@ -26,6 +27,9 @@ const useStyles = makeStyles(() =>
     omniscode: {
       fontSize: 48,
       fontWeight: 'bold',
+      [theme.breakpoints.down('sm')]: {
+        fontSize: 36,
+      },
     },
     description: {
       fontSize: 24,
@@ -37,6 +41,10 @@ const useStyles = makeStyles(() =>
       fontWeight: 'bold',
       color: '#ffffff',
       padding: 16,
+      fontSize: 16,
+      [theme.breakpoints.down('sm')]: {
+        fontSize: 12,
+      },
     },
     buttonWrapper: {
       justifyContent: 'center',
