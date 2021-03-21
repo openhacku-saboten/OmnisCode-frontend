@@ -56,6 +56,17 @@ const Home: NextPage = () => {
     ) as HTMLInputElement;
     const inputValueURL = inputElement.value;
 
+    //URLが正しいかを判定
+    const regex = new RegExp(
+      '(https?://([\\w-]+\\.)+[\\w-]+(/[\\w- .?%&=]*)?)'
+    );
+    const flagURL = regex.test(inputValueURL);
+
+    if (flagURL == false) {
+      window.alert('入力されたURLが不正です。');
+      return;
+    }
+
     alert(
       'URL:' +
         inputValueURL +
