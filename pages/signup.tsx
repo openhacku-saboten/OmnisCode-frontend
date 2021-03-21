@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Grid, TextField, Button } from '@material-ui/core';
 import React from 'react';
 
-const Home: NextPage = () => {
+const Signup: NextPage = () => {
   //登録ボタンが押されたときの処理
   function submit(): void {
     //Nameを取得
@@ -82,4 +82,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Signup;
