@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { NextPage } from 'next';
 import Head from 'next/head';
 import React, { useRef } from 'react';
@@ -36,40 +35,18 @@ const Home: NextPage = () => {
     markers.forEach((marker) => console.log('onValidate:', marker.message));
   }
 
-  //1(上の入力欄)(テスト)
+  //1(上の入力欄)(コード)
   const editorRef = useRef(null);
 
-  function handleEditorDidMount(editor, monaco): void {
+  function handleEditorDidMount(editor): void {
     editorRef.current = editor;
   }
-  //テストアラート
-  function showValue(): void {
-    alert(editorRef.current.getValue());
-  }
 
-  //2(下の入力欄)
+  //2(下の入力欄)(説明)
   const editorRefMd = useRef(null);
 
-  function handleEditorDidMountMd(editor, monaco): void {
+  function handleEditorDidMountMd(editor): void {
     editorRefMd.current = editor;
-  }
-  //テストアラート
-  function showValue2(): void {
-    alert(editorRefMd.current.getValue());
-  }
-
-  //text入力欄のデータを取得(テスト)
-  function showValueURL(): void {
-    // 値を取得
-    // const url = document.getElementById('textareaURL').value;
-    // https://stackoverflow.com/questions/12989741/the-property-value-does-not-exist-on-value-of-type-htmlelement
-    // 参考
-    const inputElement = document.getElementById(
-      'textareaURL'
-    ) as HTMLInputElement;
-    const inputValue = inputElement.value;
-    //テストアラート
-    window.alert(inputValue);
   }
 
   //投稿ボタンが押された時(本番)
@@ -113,26 +90,25 @@ const Home: NextPage = () => {
       <Grid container alignItems="center" justify="center">
         <Grid item sm={7}>
           <h1>投稿ページ</h1>
-          <h3>1. AtCoderの問題のリンクを入力</h3>
+          <h3>1. 競技プログラミングの問題のリンクを入力</h3>
 
           <TextField id="textareaURL" style={{ width: '100%' }} label="URL" />
-          {/* <button onClick={showValueURL}>Show value</button> */}
 
           <h3>2. コードを入力</h3>
 
           <div style={{ marginBottom: '15px' }}>
             <FormControl style={{ width: '30%' }}>
-              <InputLabel id="demo-simple-select-label">言語</InputLabel>
+              <InputLabel>言語</InputLabel>
               <Select value={language} onChange={handleChange}>
-                {langs.map((rang) => (
-                  <MenuItem value={rang.id}>{rang.title}</MenuItem>
+                {langs.map((lang, idx) => (
+                  <MenuItem value={lang.id} key={idx}>
+                    {lang.title}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
             <FormControl style={{ width: '30%', marginLeft: '2%' }}>
-              <InputLabel id="demo-simple-select-label">
-                エディタのテーマ
-              </InputLabel>
+              <InputLabel>エディタのテーマ</InputLabel>
               <Select value={mode} onChange={handleChange2}>
                 <MenuItem value={'light'}>light</MenuItem>
                 <MenuItem value={'vs-dark'}>dark</MenuItem>
@@ -140,7 +116,6 @@ const Home: NextPage = () => {
             </FormControl>
           </div>
 
-          {/* {console.log(language)} */}
           <Editor
             onValidate={handleEditorValidation}
             onMount={handleEditorDidMount}
@@ -150,7 +125,6 @@ const Home: NextPage = () => {
             language={language}
             defaultValue="// コードを入力してください。"
           />
-          {/* <button onClick={showValue}>Show value</button> */}
 
           <h3>3. 説明文を入力</h3>
 
@@ -162,7 +136,7 @@ const Home: NextPage = () => {
             defaultLanguage="markdown"
             defaultValue="# マークダウンで記述できます。"
           />
-          {/* <button onClick={showValue2}>Show value</button> */}
+
           <Grid container alignItems="center" justify="center">
             <Button
               onClick={submit}
