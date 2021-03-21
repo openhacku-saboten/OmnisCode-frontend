@@ -4,6 +4,26 @@ import { Grid, TextField, Button } from '@material-ui/core';
 import React from 'react';
 
 const Home: NextPage = () => {
+  //登録ボタンが押されたときの処理
+  function submit(): void {
+    //Nameを取得
+    const inputElementName = document.getElementById(
+      'textareaName'
+    ) as HTMLInputElement;
+    const inputValueName = inputElementName.value;
+    //Discriptionを取得
+    const inputElementDiscription = document.getElementById(
+      'textareaDiscription'
+    ) as HTMLInputElement;
+    const inputValueDiscription = inputElementDiscription.value;
+
+    if (inputValueName == '') {
+      window.alert('名前が入力されていません。');
+      return;
+    }
+
+    alert('名前:' + inputValueName + '\n' + '説明:' + inputValueDiscription);
+  }
   return (
     <>
       <Head>
@@ -32,18 +52,19 @@ const Home: NextPage = () => {
           <h3>新規登録ありがとうございます。</h3>
           <p>このサイトで表示する名前を入力してください。</p>
           <TextField
+            id="textareaName"
             style={{ width: '100%' }}
-            id="standard-basic"
             label="UserName"
           />
           <p>あなたのプロフィールを入力してください。</p>
           <TextField
+            id="textareaDiscription"
             style={{ width: '100%' }}
-            id="standard-basic"
             label="Discription"
           />
           <Grid container alignItems="center" justify="center">
             <Button
+              onClick={submit}
               size="large"
               variant="contained"
               color="primary"
