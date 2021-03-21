@@ -20,25 +20,41 @@ const Home: NextPage = () => {
           content="OmnisCode | コードを共有するSNS"
         />
       </Head>
-      <Grid container alignItems="center" justify="center">
-        <Grid item xs={5}>
-          <h1>プロフィール入力ページ</h1>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}>
+        <Grid item sm={5}>
+          <h1 style={{ textAlign: 'center', marginBottom: '60px' }}>
+            プロフィール入力ページ
+          </h1>
           <h3>新規登録ありがとうございます。</h3>
           <p>このサイトで表示する名前を入力してください。</p>
           <TextField
-            style={{ width: '100%', height: '80px' }}
+            style={{ width: '100%' }}
             id="standard-basic"
             label="UserName"
           />
           <p>あなたのプロフィールを入力してください。</p>
           <TextField
-            style={{ width: '100%', height: '80px' }}
+            style={{ width: '100%' }}
             id="standard-basic"
             label="Discription"
           />
-          <Button size="large" variant="contained" color="primary">
-            登録
-          </Button>
+          <Grid container alignItems="center" justify="center">
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              style={{
+                marginBottom: '30px',
+                marginTop: '30px',
+                width: '60%',
+              }}>
+              登録
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </>
