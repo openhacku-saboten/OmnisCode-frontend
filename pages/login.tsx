@@ -23,7 +23,7 @@ const useStyles = makeStyles(() =>
       alignItems: 'center',
       textAlign: 'center',
     },
-    name: {
+    omniscode: {
       fontSize: 48,
       fontWeight: 'bold',
     },
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() =>
       color: '#77838c',
       margin: 24,
     },
-    button: {
+    loginButton: {
       backgroundColor: '#00acee',
       fontWeight: 'bold',
       color: '#ffffff',
@@ -51,7 +51,7 @@ const Login: NextPage = () => {
   return (
     <Card className={styles.card}>
       <CardContent>
-        <Typography className={styles.name} align="center" variant="h2">
+        <Typography className={styles.omniscode} align="center" variant="h2">
           OmnisCode
         </Typography>
         <Typography className={styles.description} align="center" variant="h4">
@@ -59,7 +59,7 @@ const Login: NextPage = () => {
         </Typography>
       </CardContent>
       <CardActions className={styles.buttonWrapper}>
-        <Button className={styles.button}>
+        <Button className={styles.loginButton}>
           <TwitterIcon />
           <span />
           Login with Twitter
