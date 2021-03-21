@@ -62,8 +62,17 @@ const Home: NextPage = () => {
     );
     const flagURL = regex.test(inputValueURL);
 
+    //入力された文字をチェックする。
     if (flagURL == false) {
       window.alert('入力されたURLが不正です。');
+      return;
+    }
+    if (editorRef.current.getValue() == '') {
+      window.alert('コードが入力されていません。');
+      return;
+    }
+    if (editorRefMd.current.getValue() == '') {
+      window.alert('説明文が入力されていません。');
       return;
     }
 
