@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile.dev
+    volumes:
+      - ../components:/app/components
+      - ../pages:/app/pages
+      - ../public:/app/public
+      - ../src:/app/src
+      - ../styles:/app/styles
+      - ../utils:/app/utils
+    ports:
+      - 3000:3000
+    networks:
+      - api-network
+  db:
+    image: mysql:8
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=testpass
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+    networks:
+      - api-network
+  backend:
+    image: asia.gcr.io/hacku-307702/backend:latest
+    environment:
+      - ENV=test
+      - PORT=8080
+      - DB_DATABASE=test
+      - DB_USER=test
+      - DB_PASSWORD=test
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_ROOT_PASSWORD=testpass
+      - GOOGLE_APPLICATION_CREDENTIALS=firebaseCredentials.json
+    volumes:
+      - ../firebaseCredentials.json:/firebaseCredentials.json
+    ports:
+      - 8080:8080
+    restart: always
+    networks:
+      - api-network
+networks:
+  api-network:
+    driver: bridge
