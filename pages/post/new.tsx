@@ -15,6 +15,8 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
+import ReactMarkdown from 'react-markdown/with-html';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
@@ -210,7 +212,7 @@ const PostNew: NextPage = () => {
             }}>
             <Fade in={open}>
               <div className={classes.paper}>
-                <span dangerouslySetInnerHTML={{ __html: mdCode }}></span>
+                <ReactMarkdown source={mdCode} />
                 <Grid container alignItems="center" justify="center">
                   <Button
                     color="primary"
