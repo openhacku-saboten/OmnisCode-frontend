@@ -17,6 +17,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+import ReactMarkdown from 'react-markdown/with-html';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
@@ -225,8 +227,8 @@ const PostNew: NextPage = () => {
                 defaultValue="# マークダウンで記述できます。"
               />
             </TabPanel>
-            <TabPanel value={valueTab} index={1} boxPadding={0}>
-              Item Two
+            <TabPanel value={valueTab} index={1} boxPadding={2}>
+              <ReactMarkdown source={'# AA'} escapeHtml={false} />
             </TabPanel>
           </div>
 
