@@ -44,7 +44,7 @@ const Signup: NextPage = () => {
         container
         alignItems="center"
         justify="center"
-        style={{ minHeight: '100vh' }}>
+        style={{ minHeight: '75vh' }}>
         <Grid item sm={5}>
           <h1 style={{ textAlign: 'center', marginBottom: '60px' }}>
             プロフィール入力ページ
