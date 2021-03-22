@@ -3,7 +3,27 @@ import Head from 'next/head';
 import { Grid, TextField, Button } from '@material-ui/core';
 import React from 'react';
 
-const Home: NextPage = () => {
+const Signup: NextPage = () => {
+  //登録ボタンが押されたときの処理
+  function submit(): void {
+    //Nameを取得
+    const inputElementName = document.getElementById(
+      'textareaName'
+    ) as HTMLInputElement;
+    const inputValueName = inputElementName.value;
+    //Discriptionを取得
+    const inputElementDiscription = document.getElementById(
+      'textareaDiscription'
+    ) as HTMLInputElement;
+    const inputValueDiscription = inputElementDiscription.value;
+
+    if (inputValueName == '') {
+      window.alert('名前が入力されていません。');
+      return;
+    }
+
+    alert('名前:' + inputValueName + '\n' + '説明:' + inputValueDiscription);
+  }
   return (
     <>
       <Head>
@@ -20,29 +40,46 @@ const Home: NextPage = () => {
           content="OmnisCode | コードを共有するSNS"
         />
       </Head>
-      <Grid container alignItems="center" justify="center">
-        <Grid item xs={5}>
-          <h1>プロフィール入力ページ</h1>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '75vh' }}>
+        <Grid item sm={5}>
+          <h1 style={{ textAlign: 'center', marginBottom: '60px' }}>
+            プロフィール入力ページ
+          </h1>
           <h3>新規登録ありがとうございます。</h3>
           <p>このサイトで表示する名前を入力してください。</p>
           <TextField
-            style={{ width: '100%', height: '80px' }}
-            id="standard-basic"
+            id="textareaName"
+            style={{ width: '100%' }}
             label="UserName"
           />
           <p>あなたのプロフィールを入力してください。</p>
           <TextField
-            style={{ width: '100%', height: '80px' }}
-            id="standard-basic"
+            id="textareaDiscription"
+            style={{ width: '100%' }}
             label="Discription"
           />
-          <Button size="large" variant="contained" color="primary">
-            登録
-          </Button>
+          <Grid container alignItems="center" justify="center">
+            <Button
+              onClick={submit}
+              size="large"
+              variant="contained"
+              color="primary"
+              style={{
+                marginBottom: '30px',
+                marginTop: '30px',
+                width: '60%',
+              }}>
+              登録
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </>
   );
 };
 
-export default Home;
+export default Signup;
