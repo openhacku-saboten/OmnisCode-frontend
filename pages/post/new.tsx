@@ -10,9 +10,66 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
+  //プレビュー機能
+  interface TabPanelProps {
+    children?: React.ReactNode;
+    index: any;
+    value: any;
+    boxPadding: number;
+  }
+
+  function TabPanel(props: TabPanelProps): any {
+    const { children, value, index, boxPadding, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}>
+        {value === index && (
+          <Box p={boxPadding}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  function a11yProps(index: any): any {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+    },
+  }));
+  const classes = useStyles();
+  const [valueTab, setValue] = React.useState(0);
+
+  const handleChangeTab = (
+    event: React.ChangeEvent<{}>,
+    newValue: number
+  ): any => {
+    setValue(newValue);
+  };
+  //-------------------------------------------------------------------------
   //プルダウンメニュー(言語)
   const [language, setLanguage] = React.useState('cpp');
 
@@ -148,14 +205,30 @@ const PostNew: NextPage = () => {
 
           <h3>3. 説明文を入力</h3>
 
-          <Editor
-            onMount={handleEditorDidMountMd}
-            theme={mode}
-            width="100%"
-            height="60vh"
-            defaultLanguage="markdown"
-            defaultValue="# マークダウンで記述できます。"
-          />
+          <div className={classes.root}>
+            <AppBar position="static">
+              <Tabs
+                value={valueTab}
+                onChange={handleChangeTab}
+                aria-label="simple tabs example">
+                <Tab label="編集" {...a11yProps(0)} />
+                <Tab label="プレビュー" {...a11yProps(1)} />
+              </Tabs>
+            </AppBar>
+            <TabPanel value={valueTab} index={0} boxPadding={0}>
+              <Editor
+                onMount={handleEditorDidMountMd}
+                theme={mode}
+                width="100%"
+                height="60vh"
+                defaultLanguage="markdown"
+                defaultValue="# マークダウンで記述できます。"
+              />
+            </TabPanel>
+            <TabPanel value={valueTab} index={1} boxPadding={0}>
+              Item Two
+            </TabPanel>
+          </div>
 
           <Grid container alignItems="center" justify="center">
             <Button
