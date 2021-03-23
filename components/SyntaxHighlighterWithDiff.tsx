@@ -1,5 +1,6 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { diffLines } from 'diff';
 import { CommentType } from '../src/type';
 
 type Props = {
@@ -62,6 +63,74 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
             return { style };
           }}>
           {pickedRows}
+        </SyntaxHighlighter>
+      );
+    }
+    case 'commit': {
+      const diffs = diffLines(props.old_code, props.code);
+      let code = '';
+
+      // 行番号を管理
+      let row = 1;
+      let row_add = 1;
+      let row_rem = 1;
+
+      // [行数, 行数(Add), 行数(Remove), 行の種類]
+      type RowType = 'Add' | 'Remove' | 'Normal';
+      const hl_rows: [number, number, number, RowType][] = [];
+
+      // 特定の行の種類を二分探索 -> index
+      const bisectHLRows = (
+        arr: [number, number, number, RowType][],
+        lineNumber: number
+      ): number => {
+        let ok = 0;
+        let ng = arr.length;
+        while (ng - ok > 1) {
+          const md = (ok + ng) >> 1;
+          if (arr[md][0] <= lineNumber) {
+            ok = md;
+          } else {
+            ng = md;
+          }
+        }
+        return ok;
+      };
+
+      for (const diff of diffs) {
+        code += diff.value;
+        hl_rows.push([
+          row,
+          row_add,
+          row_rem,
+          diff.added ? 'Add' : diff.removed ? 'Remove' : 'Normal',
+        ]);
+        row += diff.count;
+        if (diff.added) row_add += diff.count;
+        if (diff.removed) row_rem += diff.count;
+      }
+
+      return (
+        <SyntaxHighlighter
+          language={props.language}
+          style={atomDark}
+          showLineNumbers
+          wrapLines={true}
+          lineProps={(lineNumber) => {
+            const style: {
+              display: string;
+              backgroundColor?: string;
+            } = { display: 'block' };
+            const idx = bisectHLRows(hl_rows, lineNumber);
+            const [, , , tp] = hl_rows[idx];
+            if (tp === 'Add') {
+              style.backgroundColor = '#54e346aa';
+            } else if (tp === 'Remove') {
+              style.backgroundColor = '#e84545aa';
+            }
+            return { style };
+          }}>
+          {code}
         </SyntaxHighlighter>
       );
     }
