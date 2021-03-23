@@ -15,7 +15,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
-import ReactMarkdown from 'react-markdown/with-html';
+import marked from 'marked';
 
 import { langs } from '../../utils/language';
 
@@ -82,6 +82,10 @@ const PostNew: NextPage = () => {
   function handleMdEditorChange(value): void {
     setMdCode(value);
   }
+
+  //markedを呼び出す
+  const marked = require('marked');
+  const md2html = marked(mdCode);
 
   //投稿ボタンが押された時(本番)
   function submit(): void {
@@ -212,7 +216,7 @@ const PostNew: NextPage = () => {
             }}>
             <Fade in={open}>
               <div className={classes.paper}>
-                <ReactMarkdown source={mdCode} />
+                <span dangerouslySetInnerHTML={{ __html: md2html }}></span>
                 <Grid container alignItems="center" justify="center">
                   <Button
                     color="primary"
