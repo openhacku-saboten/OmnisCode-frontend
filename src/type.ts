@@ -1,3 +1,11 @@
+export type RequireOne<T, K extends keyof T = keyof T> = K extends keyof T
+  ? PartialRequire<T, K>
+  : never;
+type PartialRequire<O, K extends keyof O> = {
+  [P in K]-?: O[P];
+} &
+  O;
+
 export type CommentType = 'post' | 'highlight' | 'commit' | 'none';
 
 export type Comment = {
@@ -6,6 +14,8 @@ export type Comment = {
   post_id?: number;
   content: string;
   source?: string;
+  // for 'post'
+  title?: string;
   // for 'post', 'highlight', 'commit'
   language?: string;
   // for 'post', 'commit'
