@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 
 import Editor from '@monaco-editor/react';
 
@@ -10,9 +10,45 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+
+import ReactMarkdown from 'react-markdown/with-html';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      modal: {
+        display: 'flex',
+        justifyContent: 'center',
+      },
+      paper: {
+        justifyContent: 'center',
+        overflow: 'auto',
+        backgroundColor: theme.palette.background.paper,
+        border: '1px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        width: '50%',
+      },
+    })
+  );
+
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = (): void => {
+    setOpen(true);
+  };
+
+  const handleClose = (): void => {
+    setOpen(false);
+  };
+
   //プルダウンメニュー(言語)
   const [language, setLanguage] = React.useState('cpp');
 
@@ -35,18 +71,16 @@ const PostNew: NextPage = () => {
     markers.forEach((marker) => console.log('onValidate:', marker.message));
   }
 
-  //1(上の入力欄)(コード)
-  const editorRef = useRef(null);
-
-  function handleEditorDidMount(editor): void {
-    editorRef.current = editor;
+  //Codeが更新されたら呼び出される
+  const [code, setCode] = useState<string>('');
+  function handleCodeEditorChange(value): void {
+    setCode(value);
   }
 
-  //2(下の入力欄)(説明)
-  const editorRefMd = useRef(null);
-
-  function handleEditorDidMountMd(editor): void {
-    editorRefMd.current = editor;
+  //MDが更新されたら呼び出される
+  const [mdCode, setMdCode] = useState<string>('');
+  function handleMdEditorChange(value): void {
+    setMdCode(value);
   }
 
   //投稿ボタンが押された時(本番)
@@ -67,11 +101,11 @@ const PostNew: NextPage = () => {
       window.alert('入力されたURLが不正です。');
       return;
     }
-    if (editorRef.current.getValue() == '') {
+    if (code == '') {
       window.alert('コードが入力されていません。');
       return;
     }
-    if (editorRefMd.current.getValue() == '') {
+    if (mdCode == '') {
       window.alert('説明文が入力されていません。');
       return;
     }
@@ -84,10 +118,10 @@ const PostNew: NextPage = () => {
         language +
         '\n' +
         'コード:' +
-        editorRef.current.getValue() +
+        code +
         '\n' +
         '説明:' +
-        editorRefMd.current.getValue()
+        mdCode
     );
   }
 
@@ -138,7 +172,7 @@ const PostNew: NextPage = () => {
 
           <Editor
             onValidate={handleEditorValidation}
-            onMount={handleEditorDidMount}
+            onChange={handleCodeEditorChange}
             theme={mode}
             width="100%"
             height="60vh"
@@ -148,14 +182,49 @@ const PostNew: NextPage = () => {
 
           <h3>3. 説明文を入力</h3>
 
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={handleOpen}>
+            プレビュー
+          </Button>
+
           <Editor
-            onMount={handleEditorDidMountMd}
+            onChange={handleMdEditorChange}
             theme={mode}
             width="100%"
             height="60vh"
             defaultLanguage="markdown"
             defaultValue="# マークダウンで記述できます。"
           />
+
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}>
+            <Fade in={open}>
+              <div className={classes.paper}>
+                <ReactMarkdown source={mdCode} />
+                <Grid container alignItems="center" justify="center">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    style={{ margin: '15px' }}
+                    onClick={handleClose}>
+                    閉じる
+                  </Button>
+                </Grid>
+              </div>
+            </Fade>
+          </Modal>
 
           <Grid container alignItems="center" justify="center">
             <Button
