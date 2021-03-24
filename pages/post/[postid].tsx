@@ -482,7 +482,7 @@ const PostDetail: NextPage = (props) => {
           <title>{post.title}</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Container style={{ marginTop: '30px' }}>
+        <Container style={{ marginTop: '30px' }} disableGutters={isXsSm}>
           <h1 style={{ textAlign: 'center', marginBottom: '60px' }}>
             {post.title}
           </h1>
