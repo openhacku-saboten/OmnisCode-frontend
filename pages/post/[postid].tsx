@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     modalCard: {
       backgroundColor: theme.palette.background.default,
-      padding: '16px',
+      paddingTop: '16px',
       borderRadius: '1rem',
       height: '100%',
       display: 'flex',
@@ -67,9 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       // (100% - 90% (CommentCard)) / 2
       transform: 'translate(5%, 0%)',
-      marginTop: '16px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      margin: '16px auto',
     },
     errorChips: {
       display: 'flex',
@@ -81,6 +79,10 @@ const useStyles = makeStyles((theme: Theme) =>
     errorChip: {
       marginLeft: '4px',
       marginRight: '4px',
+    },
+    submitButton: {
+      height: '48px',
+      fontSize: '18px',
     },
   })
 );
@@ -200,6 +202,22 @@ const PostDetail: NextPage = (props) => {
     setCommittingCode(newCode);
   };
 
+  const postComment = (
+    commentType: CommentType,
+    content: string,
+    first_line: number,
+    last_line: number,
+    code: string
+  ): void => {
+    // TODO: commentTypeに応じて処理する
+    console.log('    postID : ', post_id);
+    console.log('      type : ', commentType);
+    console.log('   content : ', content);
+    console.log('first_line : ', first_line);
+    console.log(' last_line : ', last_line);
+    console.log('      code : ', code);
+  };
+
   // 投稿プレビューのモーダルの開閉
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -284,6 +302,23 @@ const PostDetail: NextPage = (props) => {
               </>
             )}
             <Box className={styles.previewCard}>{previewCard(commentType)}</Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                postComment(
+                  commentType,
+                  comment,
+                  highlightFrom,
+                  highlightTo,
+                  committingCode
+                )
+              }
+              className={styles.submitButton}
+              disabled={errorMessages.length !== 0}
+              fullWidth>
+              投稿
+            </Button>
           </Card>
         </Container>
       </>
