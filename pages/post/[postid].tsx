@@ -222,7 +222,7 @@ const PostDetail: NextPage = (props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   // カードのプレビュー
-  const previewCard = (commentType: CommentType) => {
+  const previewCard: React.FC<CommentType> = (commentType: CommentType) => {
     switch (commentType) {
       case 'highlight': {
         return (
@@ -253,7 +253,7 @@ const PostDetail: NextPage = (props) => {
     return <CommentCard type="none" user_id="TODO" content={comment} />;
   };
 
-  const previewModal = () => {
+  const previewModal: React.FC<Record<string, never>> = () => {
     let commentType: CommentType = 'none';
     const errorMessages: string[] = [];
 
@@ -529,7 +529,7 @@ const PostDetail: NextPage = (props) => {
                       PaperProps={{
                         style: { borderRadius: '0.5rem' },
                       }}>
-                      {previewModal()}
+                      {previewModal({})}
                     </Dialog>
                   </Grid>
                 </Card>
