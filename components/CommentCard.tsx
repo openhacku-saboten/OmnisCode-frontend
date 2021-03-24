@@ -1,4 +1,4 @@
-import { Grid, Card, Divider } from '@material-ui/core';
+import { Grid, Card, Divider, Avatar } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core';
 import { Comment } from '../src/type';
 import SyntaxHighlighterWithDiff from '../components/SyntaxHighlighterWithDiff';
@@ -31,14 +31,24 @@ const useStyles = makeStyles(() =>
     },
     postTime: {
       color: '#888888',
-      textAlign: 'right',
       paddingBottom: '8px',
       paddingRight: '8px',
+    },
+    icon: {
+      width: '32px',
+      height: '32px',
+      marginRight: '8px',
+      marginBottom: '8px',
     },
   })
 );
 
-const CommentCard: React.FC<Comment> = (props) => {
+interface CommentWithAvatar extends Comment {
+  is_post_user?: boolean;
+  avatar_url?: string;
+}
+
+const CommentCard: React.FC<CommentWithAvatar> = (props) => {
   const styles = useStyles();
   return (
     <Card className={styles.card}>
@@ -62,8 +72,18 @@ const CommentCard: React.FC<Comment> = (props) => {
           <span dangerouslySetInnerHTML={{ __html: marked(props.content) }} />
         </Grid>
         <Divider light className={styles.divider} />
-        <Grid item className={styles.postTime}>
-          {props.user_id} さんが 2000-01-01 00:00 に投稿
+        <Grid item>
+          <Grid container justify="flex-end" alignItems="center">
+            {props.avatar_url && (
+              <Grid item>
+                <Avatar src={props.avatar_url} className={styles.icon} />
+              </Grid>
+            )}
+            <Grid item className={styles.postTime}>
+              {props.user_id} さん {props.is_post_user ? ' (投稿者)' : ''} が
+              2000-01-01 00:00 に投稿
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Card>
