@@ -93,7 +93,7 @@ export const getServerSideProps = ({
   params,
 }: GetServerSidePropsContext): RequireOne<{
   notFound?: boolean;
-  props?: { post: Comment };
+  props?: { post: Comment; post_id: number };
 }> => {
   const postid = params.postid as string;
   if (!isNumber(postid)) {
@@ -114,6 +114,7 @@ export const getServerSideProps = ({
           'このコードだと<https://example.com/problem>の問題が通りません。\n\nどうしたらよいでしょうか？',
         source: 'https://example.com/code',
       },
+      post_id: postid,
     },
   };
 };
@@ -123,6 +124,7 @@ const PostDetail: NextPage = (props) => {
 
   // TODO: resolve error
   const post = props.post as Comment;
+  const post_id = props.post_id;
 
   // TODO: 自身のuser_idとpost.user_idを比較
   const isMyPost = true;
@@ -131,7 +133,7 @@ const PostDetail: NextPage = (props) => {
   const comments: Comment[] = [
     {
       user_id: 'cake',
-      post_id: 0,
+      post_id: post_id,
       type: 'highlight',
       content: 'ここは`Hello`ではなくて、`Hello World`じゃないでしょうか？',
       first_line: 5,
@@ -140,7 +142,7 @@ const PostDetail: NextPage = (props) => {
     },
     {
       user_id: 'dog',
-      post_id: 0,
+      post_id: post_id,
       type: 'none',
       content: '僕もそう思います',
       first_line: 0,
@@ -149,7 +151,7 @@ const PostDetail: NextPage = (props) => {
     },
     {
       user_id: 'lion',
-      post_id: 0,
+      post_id: post_id,
       type: 'commit',
       content: 'こういうことですか？',
       first_line: 0,
@@ -159,7 +161,7 @@ const PostDetail: NextPage = (props) => {
     },
     {
       user_id: 'dog',
-      post_id: 0,
+      post_id: post_id,
       type: 'none',
       content: 'そうです',
       first_line: 0,
