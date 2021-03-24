@@ -9,6 +9,13 @@ import 'firebase/auth';
 
 import { firebaseConfig } from '../utils/firebaseConfig';
 
+/**
+ * ---API実装時に見るメモ---
+ * idTokenをheadsに入れてサーバーに送信
+ * userNameはtwitterのユーザー名(bodyに入れてサーバーに送信)
+ * ⇒ 以上の2つの情報をサーバーに送信する
+ */
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     displayBox: {
@@ -82,9 +89,18 @@ const Login: NextPage = () => {
         // The signed-in user info.
         const user = result.user;
         console.log(user);
-        const userName = user.displayName;
         // userNameはtwitterのユーザー名(bodyに入れてサーバーに送信)
+        const userName = user.displayName;
         console.log(userName);
+        // ローカルストレージにuserNameを保存
+        localStorage.setItem('userName', userName);
+
+        // userIconImageはtwitterのアイコン画像(サーバーに送信しない)
+        const userIconImage = user.photoURL;
+        console.log(userIconImage);
+        // ローカルストレージにuserIconImageの画像パスを保存
+        localStorage.setItem('userIconImage', userIconImage);
+
         firebase
           .auth()
           .currentUser.getIdToken(/* forceRefresh */ true)
@@ -92,6 +108,8 @@ const Login: NextPage = () => {
             // idTokenをheadsに入れてサーバーに送信
             // idTokenはローカルストレージに保存する
             console.log(idToken);
+            //ローカルストレージにTokenを保存
+            localStorage.setItem('Token', idToken);
           })
           .catch(function (error) {
             window.alert('error can not get current user:' + error);
