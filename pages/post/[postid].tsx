@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import {
   Timeline,
-  TimelineDot,
   TimelineItem,
   TimelineSeparator,
   TimelineContent,
@@ -41,8 +40,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '90%',
     },
     icon: {
-      width: '32px',
-      height: '32px',
+      marginTop: '8px',
+      marginBottom: '8px',
+      width: '48px',
+      height: '48px',
+    },
+    postUserIcon: {
+      border: `3px solid ${theme.palette.secondary.main}`,
     },
     checkbox: {
       marginLeft: '2px',
@@ -130,6 +134,7 @@ const PostDetail: NextPage = (props) => {
 
   // TODO: 自身のuser_idとpost.user_idを比較
   const isMyPost = true;
+  const myUserId = 'lion';
 
   // dummy
   const comments: Comment[] = [
@@ -339,9 +344,9 @@ const PostDetail: NextPage = (props) => {
             <TimelineItem>
               <TimelineOppositeContent className={styles.oppositeContent} />
               <TimelineSeparator>
-                <TimelineDot>
-                  <Avatar className={styles.icon}>{post.user_id}</Avatar>
-                </TimelineDot>
+                <Avatar className={`${styles.icon} ${styles.postUserIcon}`}>
+                  {post.user_id}
+                </Avatar>
                 <TimelineConnector />
               </TimelineSeparator>
               <TimelineContent>
@@ -364,9 +369,12 @@ const PostDetail: NextPage = (props) => {
                 <TimelineItem key={idx}>
                   <TimelineOppositeContent className={styles.oppositeContent} />
                   <TimelineSeparator>
-                    <TimelineDot>
-                      <Avatar className={styles.icon}>{comment.user_id}</Avatar>
-                    </TimelineDot>
+                    <Avatar
+                      className={`${styles.icon} ${
+                        myUserId === comment.user_id ? styles.postUserIcon : ''
+                      }`}>
+                      {comment.user_id}
+                    </Avatar>
                     <TimelineConnector />
                   </TimelineSeparator>
                   <TimelineContent>
@@ -388,11 +396,9 @@ const PostDetail: NextPage = (props) => {
             <TimelineItem>
               <TimelineOppositeContent className={styles.oppositeContent} />
               <TimelineSeparator>
-                <TimelineDot>
-                  <Avatar className={styles.icon}>
-                    <AddIcon />
-                  </Avatar>
-                </TimelineDot>
+                <Avatar className={styles.icon}>
+                  <AddIcon />
+                </Avatar>
               </TimelineSeparator>
               <TimelineContent>
                 <Card className={styles.formCard}>
