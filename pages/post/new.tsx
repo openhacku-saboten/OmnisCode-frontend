@@ -17,6 +17,8 @@ import Fade from '@material-ui/core/Fade';
 
 import marked from 'marked';
 
+import axios from 'axios';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
@@ -84,7 +86,6 @@ const PostNew: NextPage = () => {
   }
 
   //markedを呼び出す
-  const marked = require('marked');
   const md2html = marked(mdCode);
 
   //投稿ボタンが押された時(本番)
@@ -127,6 +128,33 @@ const PostNew: NextPage = () => {
         '説明:' +
         mdCode
     );
+
+    //API通信を実装
+    const TOKEN = localStorage.getItem('Authorization');
+
+    const baseURL = 'http://backend:8080/api/v1';
+    axios
+      .post(
+        baseURL + '/post',
+        {
+          title: 'title',
+          code: code,
+          language: language,
+          content: mdCode,
+          source: inputValueURL,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   return (
