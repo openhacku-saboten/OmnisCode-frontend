@@ -208,6 +208,8 @@ const PostDetail: NextPage = (props) => {
     code: string
   ): void => {
     // TODO: commentTypeに応じて処理する
+    // TODO: 投稿が成功したら更新をかける (snackbarとかで通知)
+    alert('consoleに出力しています');
     console.log('    postID : ', post_id);
     console.log('      type : ', commentType);
     console.log('   content : ', content);
