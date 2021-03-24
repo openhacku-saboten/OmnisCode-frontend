@@ -264,7 +264,7 @@ const PostDetail: NextPage = (props) => {
                               container
                               alignItems="center"
                               justify="center">
-                              <Grid item xs={5}>
+                              <Grid item xs={4}>
                                 <TextField
                                   defaultValue={highlightFrom}
                                   label="始点"
@@ -292,7 +292,7 @@ const PostDetail: NextPage = (props) => {
                               <Grid item xs={1}>
                                 <Box style={{ textAlign: 'center' }}>〜</Box>
                               </Grid>
-                              <Grid item xs={5}>
+                              <Grid item xs={4}>
                                 <TextField
                                   defaultValue={highlightTo}
                                   label="終点"
