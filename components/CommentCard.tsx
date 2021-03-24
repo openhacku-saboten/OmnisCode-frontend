@@ -2,6 +2,7 @@ import { Grid, Card, Divider } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core';
 import { Comment } from '../src/type';
 import SyntaxHighlighterWithDiff from '../components/SyntaxHighlighterWithDiff';
+import marked from 'marked';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -50,7 +51,7 @@ const CommentCard: React.FC<Comment> = (props) => {
           </Grid>
         )}
         <Grid item className={styles.content}>
-          {props.content}
+          <span dangerouslySetInnerHTML={{ __html: marked(props.content) }} />
         </Grid>
         <Divider light className={styles.divider} />
         <Grid item className={styles.postTime}>
