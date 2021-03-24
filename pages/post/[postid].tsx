@@ -38,6 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: '24px',
       borderRadius: '1rem',
       width: '90%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
     icon: {
       marginTop: '8px',
@@ -69,8 +71,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     previewCard: {
       width: '100%',
-      // (100% - 90% (CommentCard)) / 2
-      transform: 'translate(5%, 0%)',
       margin: '16px auto',
     },
     errorChips: {

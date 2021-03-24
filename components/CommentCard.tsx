@@ -10,6 +10,8 @@ const useStyles = makeStyles(() =>
       marginBottom: '24px',
       borderRadius: '1rem',
       width: '90%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
     content: {
       padding: '0px 16px',
