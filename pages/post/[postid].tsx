@@ -193,7 +193,6 @@ const PostDetail: NextPage = (props) => {
   const [isHighlight, setIsHighlight] = useState<boolean>(false);
   const [highlightFrom, setHighlightFrom] = useState<number>(1);
   const [highlightTo, setHighlightTo] = useState<number>(1);
-  console.log(highlightFrom, highlightTo);
 
   // for 'commit'
   const [isCommit, setIsCommit] = useState<boolean>(false);
