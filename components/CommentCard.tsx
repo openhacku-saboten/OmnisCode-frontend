@@ -15,6 +15,8 @@ const useStyles = makeStyles(() =>
     content: {
       fontSize: '16px',
       marginTop: '16px',
+      marginLeft: '8px',
+      marginRight: '8px',
     },
     source: {
       textAlign: 'right',
