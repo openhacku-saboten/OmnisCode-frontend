@@ -4,9 +4,11 @@ import {
   Button,
   Card,
   Checkbox,
+  Chip,
   Container,
   FormControlLabel,
   Grid,
+  Modal,
   TextField,
 } from '@material-ui/core';
 import {
@@ -20,13 +22,13 @@ import {
 } from '@material-ui/lab';
 import { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import CommentCard from '../../components/CommentCard';
-import { RequireOne, Comment } from '../../src/type';
+import { RequireOne, Comment, CommentType } from '../../src/type';
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     // https://github.com/mui-org/material-ui/issues/22278
     oppositeContent: {
@@ -43,6 +45,41 @@ const useStyles = makeStyles(() =>
     },
     checkbox: {
       marginLeft: '2px',
+    },
+    modal: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      maxHeight: '80%',
+    },
+    modalCard: {
+      backgroundColor: theme.palette.background.default,
+      padding: '16px',
+      borderRadius: '1rem',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+    },
+    previewCard: {
+      width: '100%',
+      // (100% - 90% (CommentCard)) / 2
+      transform: 'translate(5%, 0%)',
+      marginTop: '16px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+    errorChips: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      listStyle: 'none',
+    },
+    errorChip: {
+      marginLeft: '4px',
+      marginRight: '4px',
     },
   })
 );
@@ -142,7 +179,7 @@ const PostDetail: NextPage = (props) => {
   const newest_code_row = newest_code.split(/\n|\r\n/).length;
 
   // for all
-  const [comment, setComment] = useState<string>('');
+  const [comment, setComment] = useState<string>('## コメント');
   const handleMarkdownEditorChange = (newComment: string): void => {
     setComment(newComment);
   };
@@ -158,6 +195,96 @@ const PostDetail: NextPage = (props) => {
   const [committingCode, setCommittingCode] = useState<string>(newest_code);
   const handleCommitEditorChange = (newCode: string): void => {
     setCommittingCode(newCode);
+  };
+
+  // 投稿プレビューのモーダルの開閉
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  // カードのプレビュー
+  const previewCard = (commentType: CommentType) => {
+    switch (commentType) {
+      case 'highlight': {
+        return (
+          <CommentCard
+            type="highlight"
+            user_id="TODO"
+            content={comment}
+            language={post.language}
+            code={newest_code}
+            first_line={highlightFrom}
+            last_line={highlightTo}
+          />
+        );
+      }
+      case 'commit': {
+        return (
+          <CommentCard
+            type="commit"
+            user_id="TODO"
+            content={comment}
+            language={post.language}
+            code={committingCode}
+            old_code={newest_code}
+          />
+        );
+      }
+    }
+    return <CommentCard type="none" user_id="TODO" content={comment} />;
+  };
+
+  const previewModal = () => {
+    let commentType: CommentType = 'none';
+    const errorMessages: string[] = [];
+
+    if (isHighlight) {
+      commentType = 'highlight';
+      if (highlightFrom < 1 || highlightFrom > newest_code_row)
+        errorMessages.push(
+          `始点の行数は1以上${newest_code_row}以下である必要があります`
+        );
+      if (highlightTo < 1 || highlightTo > newest_code_row)
+        errorMessages.push(
+          `終点の行数は1以上${newest_code_row}以下である必要があります`
+        );
+      if (highlightFrom > highlightTo)
+        errorMessages.push('終点の行数は始点の行数以上である必要があります');
+    } else if (isCommit) {
+      commentType = 'commit';
+      if (newest_code === committingCode)
+        errorMessages.push('ソースコードが変更されていません');
+    }
+
+    if (errorMessages.length > 0) {
+      commentType = 'none';
+    }
+
+    return (
+      <>
+        <Container className={styles.modal}>
+          <Card className={styles.modalCard}>
+            <h1>プレビュー</h1>
+            {errorMessages.length > 0 && (
+              <>
+                <ul className={styles.errorChips}>
+                  {errorMessages.map((errorMessage, idx) => (
+                    <li key={idx}>
+                      <Chip
+                        key={idx}
+                        color="secondary"
+                        label={errorMessage}
+                        variant="outlined"
+                        className={styles.errorChip}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <Box className={styles.previewCard}>{previewCard(commentType)}</Box>
+          </Card>
+        </Container>
+      </>
+    );
   };
 
   return (
@@ -236,7 +363,7 @@ const PostDetail: NextPage = (props) => {
                         height="240px"
                         theme="vs-dark"
                         defaultLanguage="markdown"
-                        defaultValue="## 概要"
+                        defaultValue={comment}
                         options={{ fontSize: '16px' }}
                         onChange={handleMarkdownEditorChange}
                       />
@@ -349,9 +476,16 @@ const PostDetail: NextPage = (props) => {
                         )}
                       </Grid>
                     )}
-                    <Button variant="contained" color="primary" fullWidth>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => setModalOpen(true)}
+                      fullWidth>
                       投稿確認 (プレビュー表示)
                     </Button>
+                    <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+                      {previewModal()}
+                    </Modal>
                   </Grid>
                 </Card>
               </TimelineContent>
