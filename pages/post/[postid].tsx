@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
       border: `3px solid ${theme.palette.secondary.main}`,
     },
     checkbox: {
-      marginLeft: '2px',
+      marginLeft: '8px',
     },
     squareButton: {
       borderRadius: '0px',
