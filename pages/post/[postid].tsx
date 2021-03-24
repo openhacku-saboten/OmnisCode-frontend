@@ -30,12 +30,12 @@ const useStyles = makeStyles(() =>
   createStyles({
     // https://github.com/mui-org/material-ui/issues/22278
     oppositeContent: {
-      flex: 0.2,
+      flex: 0.1,
     },
     formCard: {
       marginBottom: '24px',
       borderRadius: '1rem',
-      width: '80%',
+      width: '90%',
     },
     icon: {
       width: '32px',

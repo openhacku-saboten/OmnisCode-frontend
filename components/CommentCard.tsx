@@ -9,7 +9,7 @@ const useStyles = makeStyles(() =>
       marginBottom: '24px',
       borderRadius: '1rem',
       padding: '16px',
-      width: '80%',
+      width: '90%',
     },
     content: {
       fontSize: '16px',
