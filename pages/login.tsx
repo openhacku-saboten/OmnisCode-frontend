@@ -7,6 +7,8 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
+import { firebaseConfig } from '../utils/firebaseConfig';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     displayBox: {
@@ -52,69 +54,65 @@ const useStyles = makeStyles((theme: Theme) =>
 const Login: NextPage = () => {
   const styles = useStyles();
 
-  const firebaseConfig = {
-    apiKey: 'AIzaSyANZ7TpygQkvJuRu7PyIuT8jIdELSdijPg',
-    authDomain: 'omniscode-31b23.firebaseapp.com',
-    projectId: 'omniscode-31b23',
-    storageBucket: 'omniscode-31b23.appspot.com',
-    messagingSenderId: '1031677260576',
-    appId: '1:1031677260576:web:7f63ca23496d71deeb1d45',
-    measurementId: 'G-EX6EXHMLGV',
-  };
+  function submit(): void {
+    // 初期化は一度だけ(!!重要!!)
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
 
-  // 初期化は一度だけ(!!重要!!)
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+    // 認証処理
+    // signInWithPopupメソッドを叩くと、認証用のポップアップ画面が表示される。
+    // それにTwitterのIDとパスワードを入力すると、コールバックをfirebase側が処理し、
+    // 認証成功時はPromise型で認証情報を返す
+    const provider = new firebase.auth.TwitterAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        /** @type {firebase.auth.OAuthCredential} */
+        const credential = result.credential as firebase.auth.OAuthCredential;
+
+        // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+        // You can use these server side with your app's credentials to access the Twitter API.
+        const token = credential.accessToken;
+        console.log('token:' + token);
+        const secret = credential.secret;
+        console.log('secret:' + secret);
+
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+        const userName = user.displayName;
+        // userNameはtwitterのユーザー名(bodyに入れてサーバーに送信)
+        console.log(userName);
+        firebase
+          .auth()
+          .currentUser.getIdToken(/* forceRefresh */ true)
+          .then(function (idToken) {
+            // idTokenをheadsに入れてサーバーに送信
+            // idTokenはローカルストレージに保存する
+            console.log(idToken);
+          })
+          .catch(function (error) {
+            window.alert('error can not get current user:' + error);
+          });
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        console.log(errorCode);
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        // The email of the user's account used.
+        const email = error.email;
+        console.log(email);
+        // The firebase.auth.AuthCredential type that was used.
+        const credential = error.credential;
+        console.log(credential);
+        // ...
+      });
   }
-
-  //以下ブログ記事抜粋
-  // 実際の認証処理。
-  // signInWithPopupメソッドを叩くと、認証用のポップアップ画面が表示される。
-  // それにGoogleのIDとパスワードを入力すると、コールバックをfirebase側が処理し、
-  // 認証成功時はPromise型で認証情報を返す
-  const provider = new auth.GoogleAuthProvider();
-  auth()
-    .signInWithPopup(provider)
-    .then((result) => {
-      // 認証成功時、credentialプロパティに認証情報が含まれることがある
-      const credential = result.credential;
-      if (credential !== null) {
-        // credentialに対する型推論結果はauth.AuthCredential型。
-        // しかしGoogleの場合はOAuthなので、auth.OAuthCredential型に
-        // キャストしないと、IDトークン・アクセストークンを取り出せない
-        // (OAuthCredential型はAuthCredential型を継承している)
-        const idToken = (credential as auth.OAuthCredential).idToken;
-        const accessToken = (credential as auth.OAuthCredential).accessToken;
-        console.log(idToken);
-        console.log(accessToken);
-        // ただ認証するだけでなく、IDトークン・アクセストークンが必要な際は、
-        // 別途REST APIを叩くなどして利用できる
-      }
-
-      // 認証成功時、userプロパティに認証情報が含まれることがある
-      const user = result.user;
-      if (user !== null) {
-        // displayNameはいわば「表示名」(≒ハンドルネーム)。
-        // uidは、firebaseにおいてユーザーを一意に識別するためのユニークなID
-        const displayName = user.displayName;
-        const uid = user.uid;
-        console.log(displayName);
-        console.log(uid);
-      }
-    })
-    .catch((error) => {
-      // エラー発生時は、その詳細が
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = error.credential;
-      console.log(error);
-      console.log(errorCode);
-      console.log(errorMessage);
-      console.log(email);
-      console.log(credential);
-    });
-
   return (
     <Box className={styles.displayBox} borderRadius={16}>
       <Box>
@@ -126,7 +124,7 @@ const Login: NextPage = () => {
         </Typography>
       </Box>
       <Box className={styles.buttonWrapper}>
-        <Button className={styles.loginButton}>
+        <Button className={styles.loginButton} onClick={submit}>
           <TwitterIcon />
           Login with Twitter
         </Button>
