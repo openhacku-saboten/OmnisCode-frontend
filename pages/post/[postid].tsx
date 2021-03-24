@@ -1,4 +1,14 @@
-import { Avatar, Box, Container } from '@material-ui/core';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  Grid,
+  TextField,
+} from '@material-ui/core';
 import {
   Timeline,
   TimelineDot,
@@ -13,6 +23,8 @@ import Head from 'next/head';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import CommentCard from '../../components/CommentCard';
 import { RequireOne, Comment } from '../../src/type';
+import React, { useState } from 'react';
+import Editor from '@monaco-editor/react';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -20,12 +32,17 @@ const useStyles = makeStyles(() =>
     oppositeContent: {
       flex: 0.2,
     },
-    commentCard: {
-      marginTop: '32px',
+    formCard: {
+      marginBottom: '24px',
+      borderRadius: '1rem',
+      width: '80%',
     },
     icon: {
       width: '32px',
       height: '32px',
+    },
+    checkbox: {
+      marginLeft: '2px',
     },
   })
 );
@@ -68,6 +85,9 @@ const PostDetail: NextPage = (props) => {
 
   // TODO: resolve error
   const post = props.post as Comment;
+
+  // TODO: 自身のuser_idとpost.user_idを比較
+  const isMyPost = true;
 
   // dummy
   const comments: Comment[] = [
@@ -112,6 +132,33 @@ const PostDetail: NextPage = (props) => {
 
   // その時点での最新のコード
   let cur_code = post.code;
+
+  // 最後にコミットされたコード
+  const newest_code = [{ ...post, type: 'commit' }, ...comments]
+    .filter((comment) => {
+      return comment.type === 'commit';
+    })
+    .slice(-1)[0].code;
+  const newest_code_row = newest_code.split(/\n|\r\n/).length;
+
+  // for all
+  const [comment, setComment] = useState<string>('');
+  const handleMarkdownEditorChange = (newComment: string): void => {
+    setComment(newComment);
+  };
+
+  // for 'highlight'
+  const [isHighlight, setIsHighlight] = useState<boolean>(false);
+  const [highlightFrom, setHighlightFrom] = useState<number>(1);
+  const [highlightTo, setHighlightTo] = useState<number>(1);
+  console.log(highlightFrom, highlightTo);
+
+  // for 'commit'
+  const [isCommit, setIsCommit] = useState<boolean>(false);
+  const [committingCode, setCommittingCode] = useState<string>(newest_code);
+  const handleCommitEditorChange = (newCode: string): void => {
+    setCommittingCode(newCode);
+  };
 
   return (
     <>
@@ -181,7 +228,133 @@ const PostDetail: NextPage = (props) => {
                   <Avatar className={styles.icon}>+</Avatar>
                 </TimelineDot>
               </TimelineSeparator>
-              <TimelineContent />
+              <TimelineContent>
+                <Card className={styles.formCard}>
+                  <Grid container direction="column">
+                    <Grid item xs={12}>
+                      <Editor
+                        height="240px"
+                        theme="vs-dark"
+                        defaultLanguage="markdown"
+                        defaultValue="## 概要"
+                        options={{ fontSize: '16px' }}
+                        onChange={handleMarkdownEditorChange}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Grid container direction="column">
+                        <Grid item>
+                          <FormControlLabel
+                            className={styles.checkbox}
+                            control={
+                              <Checkbox
+                                checked={isHighlight}
+                                onChange={(e) => {
+                                  setIsHighlight(e.target.checked);
+                                  if (e.target.checked) setIsCommit(false);
+                                }}
+                              />
+                            }
+                            label="特定の行をハイライトする"
+                          />
+                        </Grid>
+                        {isHighlight && (
+                          <Grid item xs={12}>
+                            <Grid
+                              container
+                              alignItems="center"
+                              justify="center">
+                              <Grid item xs={5}>
+                                <TextField
+                                  defaultValue={highlightFrom}
+                                  label="始点"
+                                  type="number"
+                                  onChange={(e) =>
+                                    setHighlightFrom(
+                                      Math.floor(Number(e.target.value))
+                                    )
+                                  }
+                                  error={
+                                    highlightFrom < 1 ||
+                                    highlightFrom > newest_code_row ||
+                                    highlightFrom > highlightTo
+                                  }
+                                  helperText={
+                                    highlightFrom < 1 ||
+                                    highlightFrom > newest_code_row ||
+                                    highlightFrom > highlightTo
+                                      ? `1以上${newest_code_row}以下かつ終点以下の値である必要があります`
+                                      : ''
+                                  }
+                                  fullWidth
+                                />
+                              </Grid>
+                              <Grid item xs={1}>
+                                <Box style={{ textAlign: 'center' }}>〜</Box>
+                              </Grid>
+                              <Grid item xs={5}>
+                                <TextField
+                                  defaultValue={highlightTo}
+                                  label="終点"
+                                  type="number"
+                                  onChange={(e) =>
+                                    setHighlightTo(
+                                      Math.floor(Number(e.target.value))
+                                    )
+                                  }
+                                  error={
+                                    highlightTo < 1 ||
+                                    highlightTo > newest_code_row ||
+                                    highlightFrom > highlightTo
+                                  }
+                                  helperText={
+                                    highlightTo < 1 ||
+                                    highlightTo > newest_code_row ||
+                                    highlightFrom > highlightTo
+                                      ? `1以上${newest_code_row}以下かつ始点以上の値である必要があります`
+                                      : ''
+                                  }
+                                  fullWidth
+                                />
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+                    {isMyPost && (
+                      <Grid item>
+                        <FormControlLabel
+                          className={styles.checkbox}
+                          control={
+                            <Checkbox
+                              checked={isCommit}
+                              onChange={(e) => {
+                                setIsCommit(e.target.checked);
+                                if (e.target.checked) setIsHighlight(false);
+                              }}
+                            />
+                          }
+                          label="ソースコードを更新する"
+                        />
+                        {isCommit && (
+                          <Editor
+                            height="360px"
+                            theme="vs-dark"
+                            defaultLanguage={post.language}
+                            defaultValue={committingCode}
+                            options={{ fontSize: '16px' }}
+                            onChange={handleCommitEditorChange}
+                          />
+                        )}
+                      </Grid>
+                    )}
+                    <Button variant="contained" color="primary" fullWidth>
+                      投稿確認 (プレビュー表示)
+                    </Button>
+                  </Grid>
+                </Card>
+              </TimelineContent>
             </TimelineItem>
           </Timeline>
         </Container>
