@@ -67,7 +67,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
               backgroundColor?: string;
             } = { display: 'block' };
             if (hl_bgn <= lineNumber && lineNumber <= hl_end) {
-              style.backgroundColor = '#e9896aaa';
+              style.backgroundColor = '#f8dc8188';
             }
             return { style };
           }}>
@@ -133,9 +133,9 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
             const idx = bisectHLRows(hl_rows, lineNumber);
             const [, , , tp] = hl_rows[idx];
             if (tp === 'Add') {
-              style.backgroundColor = '#54e346aa';
+              style.backgroundColor = '#16c79a88';
             } else if (tp === 'Remove') {
-              style.backgroundColor = '#e84545aa';
+              style.backgroundColor = '#f1466888';
             }
             return { style };
           }}>
