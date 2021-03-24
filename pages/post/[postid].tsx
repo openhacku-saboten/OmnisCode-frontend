@@ -6,9 +6,9 @@ import {
   Checkbox,
   Chip,
   Container,
+  Dialog,
   FormControlLabel,
   Grid,
-  Modal,
   TextField,
 } from '@material-ui/core';
 import {
@@ -46,17 +46,16 @@ const useStyles = makeStyles((theme: Theme) =>
     checkbox: {
       marginLeft: '2px',
     },
-    modal: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      maxHeight: '80%',
+    squareButton: {
+      borderRadius: '0px',
+    },
+    dialog: {
+      margin: '0px',
+      borderRadius: '1rem',
     },
     modalCard: {
       backgroundColor: theme.palette.background.default,
-      paddingTop: '16px',
-      borderRadius: '1rem',
+      padding: '0px',
       height: '100%',
       display: 'flex',
       justifyContent: 'center',
@@ -71,14 +70,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     errorChips: {
       display: 'flex',
+      flexWrap: 'wrap',
       justifyContent: 'center',
       alignItems: 'center',
       listStyle: 'none',
       padding: '0px',
     },
     errorChip: {
-      marginLeft: '4px',
-      marginRight: '4px',
+      margin: '4px',
     },
     submitButton: {
       height: '48px',
@@ -280,46 +279,44 @@ const PostDetail: NextPage = (props) => {
 
     return (
       <>
-        <Container className={styles.modal}>
-          <Card className={styles.modalCard}>
-            <h1>投稿プレビュー</h1>
-            {errorMessages.length > 0 && (
-              <>
-                <ul className={styles.errorChips}>
-                  {errorMessages.map((errorMessage, idx) => (
-                    <li key={idx}>
-                      <Chip
-                        key={idx}
-                        color="secondary"
-                        label={errorMessage}
-                        variant="outlined"
-                        className={styles.errorChip}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            <Box className={styles.previewCard}>{previewCard(commentType)}</Box>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() =>
-                postComment(
-                  commentType,
-                  comment,
-                  highlightFrom,
-                  highlightTo,
-                  committingCode
-                )
-              }
-              className={styles.submitButton}
-              disabled={errorMessages.length !== 0}
-              fullWidth>
-              投稿
-            </Button>
-          </Card>
-        </Container>
+        <Card className={styles.modalCard}>
+          <h1>投稿プレビュー</h1>
+          {errorMessages.length > 0 && (
+            <>
+              <ul className={styles.errorChips}>
+                {errorMessages.map((errorMessage, idx) => (
+                  <li key={idx}>
+                    <Chip
+                      key={idx}
+                      color="secondary"
+                      label={errorMessage}
+                      variant="outlined"
+                      className={styles.errorChip}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          <Box className={styles.previewCard}>{previewCard(commentType)}</Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              postComment(
+                commentType,
+                comment,
+                highlightFrom,
+                highlightTo,
+                committingCode
+              )
+            }
+            className={`${styles.submitButton} ${styles.squareButton}`}
+            disabled={errorMessages.length !== 0}
+            fullWidth>
+            投稿
+          </Button>
+        </Card>
       </>
     );
   };
@@ -517,12 +514,21 @@ const PostDetail: NextPage = (props) => {
                       variant="contained"
                       color="primary"
                       onClick={() => setModalOpen(true)}
+                      className={styles.squareButton}
                       fullWidth>
                       投稿確認 (プレビュー表示)
                     </Button>
-                    <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+                    <Dialog
+                      open={modalOpen}
+                      onClose={() => setModalOpen(false)}
+                      className={styles.dialog}
+                      fullWidth
+                      maxWidth="md"
+                      PaperProps={{
+                        style: { borderRadius: '0.5rem' },
+                      }}>
                       {previewModal()}
-                    </Modal>
+                    </Dialog>
                   </Grid>
                 </Card>
               </TimelineContent>
