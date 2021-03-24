@@ -262,7 +262,7 @@ const PostDetail: NextPage = (props) => {
       <>
         <Container className={styles.modal}>
           <Card className={styles.modalCard}>
-            <h1>プレビュー</h1>
+            <h1>投稿プレビュー</h1>
             {errorMessages.length > 0 && (
               <>
                 <ul className={styles.errorChips}>
