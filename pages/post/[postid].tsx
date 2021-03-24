@@ -27,6 +27,7 @@ import CommentCard from '../../components/CommentCard';
 import { RequireOne, Comment, CommentType } from '../../src/type';
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -388,7 +389,9 @@ const PostDetail: NextPage = (props) => {
               <TimelineOppositeContent className={styles.oppositeContent} />
               <TimelineSeparator>
                 <TimelineDot>
-                  <Avatar className={styles.icon}>+</Avatar>
+                  <Avatar className={styles.icon}>
+                    <AddIcon />
+                  </Avatar>
                 </TimelineDot>
               </TimelineSeparator>
               <TimelineContent>
