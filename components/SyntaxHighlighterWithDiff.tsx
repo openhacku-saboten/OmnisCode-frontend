@@ -13,6 +13,15 @@ type Props = {
 };
 
 const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
+  // 余計なmarginを消す
+  const atomDarkWithoutMargin = {
+    ...atomDark,
+    'pre[class*="language-"]': {
+      ...atomDark['pre[class*="language-"]'],
+      margin: '0 0',
+    },
+  };
+
   // 表示する行を抽出
   const selectRows = (
     code: string,
@@ -33,7 +42,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
       return (
         <SyntaxHighlighter
           language={props.language}
-          style={atomDark}
+          style={atomDarkWithoutMargin}
           showLineNumbers>
           {props.code}
         </SyntaxHighlighter>
@@ -48,7 +57,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
       return (
         <SyntaxHighlighter
           language={props.language}
-          style={atomDark}
+          style={atomDarkWithoutMargin}
           showLineNumbers
           startingLineNumber={startingLineNumber}
           wrapLines={true}
@@ -113,7 +122,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
       return (
         <SyntaxHighlighter
           language={props.language}
-          style={atomDark}
+          style={atomDarkWithoutMargin}
           showLineNumbers
           wrapLines={true}
           lineProps={(lineNumber) => {
