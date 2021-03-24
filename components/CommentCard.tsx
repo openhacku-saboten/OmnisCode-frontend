@@ -9,17 +9,19 @@ const useStyles = makeStyles(() =>
     card: {
       marginBottom: '24px',
       borderRadius: '1rem',
-      padding: '16px',
       width: '90%',
     },
     content: {
+      padding: '0px 16px',
       fontSize: '16px',
-      marginTop: '16px',
-      marginLeft: '8px',
-      marginRight: '8px',
+      marginTop: '8px',
+      marginLeft: '4px',
+      marginRight: '4px',
     },
     source: {
       textAlign: 'right',
+      paddingTop: '8px',
+      paddingRight: '12px',
     },
     divider: {
       marginTop: '12px',
@@ -28,6 +30,8 @@ const useStyles = makeStyles(() =>
     postTime: {
       color: '#888888',
       textAlign: 'right',
+      paddingBottom: '8px',
+      paddingRight: '8px',
     },
   })
 );
