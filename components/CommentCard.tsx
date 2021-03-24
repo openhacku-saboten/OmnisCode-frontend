@@ -57,7 +57,7 @@ const CommentCard: React.FC<Comment> = (props) => {
         </Grid>
         <Divider light className={styles.divider} />
         <Grid item className={styles.postTime}>
-          2000-01-01 00:00 に投稿
+          {props.user_id} さんが 2000-01-01 00:00 に投稿
         </Grid>
       </Grid>
     </Card>
