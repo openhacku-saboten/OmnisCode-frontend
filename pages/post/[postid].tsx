@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       listStyle: 'none',
+      padding: '0px',
     },
     errorChip: {
       marginLeft: '4px',
