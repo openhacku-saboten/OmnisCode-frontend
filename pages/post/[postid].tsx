@@ -114,7 +114,7 @@ export const getServerSideProps = ({
           'このコードだと<https://example.com/problem>の問題が通りません。\n\nどうしたらよいでしょうか？',
         source: 'https://example.com/code',
       },
-      post_id: postid,
+      post_id: Number(postid),
     },
   };
 };
