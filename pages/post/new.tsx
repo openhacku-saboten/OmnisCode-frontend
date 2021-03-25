@@ -17,6 +17,10 @@ import Fade from '@material-ui/core/Fade';
 
 import marked from 'marked';
 
+import axios from '../../utils/axios';
+
+import Router from 'next/router';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
@@ -126,6 +130,38 @@ const PostNew: NextPage = () => {
         '説明:' +
         mdCode
     );
+    const inputValueTitle = 'タイトルです。';
+
+    //API通信を実装
+    const auth_token = localStorage.getItem('Token');
+
+    axios
+      .post(
+        '/post',
+        {
+          title: inputValueTitle,
+          code: code,
+          language: language,
+          content: mdCode,
+          source: inputValueURL,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        window.alert('投稿が完了しました。');
+        Router.push('/');
+      })
+      .catch((error) => {
+        console.log('Error : ' + JSON.stringify(error.response));
+        console.log('Error msg : ' + error.response.data.message);
+        window.alert('投稿に失敗しました。');
+      });
   }
 
   return (
