@@ -92,10 +92,15 @@ const PostNew: NextPage = () => {
 
   //投稿ボタンが押された時(本番)
   function submit(): void {
-    const inputElement = document.getElementById(
+    const inputElementURL = document.getElementById(
       'textareaURL'
     ) as HTMLInputElement;
-    const inputValueURL = inputElement.value;
+    const inputValueURL = inputElementURL.value;
+
+    const inputElementTitle = document.getElementById(
+      'textareaTitle'
+    ) as HTMLInputElement;
+    const inputValueTitle = inputElementTitle.value;
 
     //URLが正しいかを判定
     const regex = new RegExp(
@@ -104,6 +109,10 @@ const PostNew: NextPage = () => {
     const flagURL = regex.test(inputValueURL);
 
     //入力された文字をチェックする。
+    if (!inputValueTitle) {
+      window.alert('タイトルが入力されていません。');
+      return;
+    }
     if (flagURL == false) {
       window.alert('入力されたURLが不正です。');
       return;
@@ -116,21 +125,6 @@ const PostNew: NextPage = () => {
       window.alert('説明文が入力されていません。');
       return;
     }
-
-    alert(
-      'URL:' +
-        inputValueURL +
-        '\n' +
-        '言語:' +
-        language +
-        '\n' +
-        'コード:' +
-        code +
-        '\n' +
-        '説明:' +
-        mdCode
-    );
-    const inputValueTitle = 'タイトルです。';
 
     //API通信を実装
     const auth_token = localStorage.getItem('Token');
@@ -183,11 +177,20 @@ const PostNew: NextPage = () => {
       <Grid container alignItems="center" justify="center">
         <Grid item sm={7}>
           <h1>投稿ページ</h1>
-          <h3>1. 競技プログラミングの問題のリンクを入力</h3>
+
+          <h3>1.質問のタイトルを入力</h3>
+
+          <TextField
+            id="textareaTitle"
+            style={{ width: '100%' }}
+            label="タイトル"
+          />
+
+          <h3>2. 競技プログラミングの問題のリンクを入力</h3>
 
           <TextField id="textareaURL" style={{ width: '100%' }} label="URL" />
 
-          <h3>2. コードを入力</h3>
+          <h3>3. コードを入力</h3>
 
           <div style={{ marginBottom: '15px' }}>
             <FormControl style={{ width: '30%' }}>
@@ -219,7 +222,7 @@ const PostNew: NextPage = () => {
             defaultValue="// コードを入力してください。"
           />
 
-          <h3>3. 説明文を入力</h3>
+          <h3>4. 説明文を入力</h3>
 
           <Button
             size="small"
