@@ -36,7 +36,7 @@ docker-compose version 1.25.0, build unknown
 - **手順**
   - @kaitoに連絡してfirebase projectから鍵をダウンロードできる権限をつけてもらう
   - firebaseから鍵をダウンロード
-  - `firebaseCredential.json` にファイル名を変更する。gitignoreにはすでに追加しているので、ちゃんとignoreされていることを確かめる
+  - `firebaseCredentials.json` にファイル名を変更する。gitignoreにはすでに追加しているので、ちゃんとignoreされていることを確かめる
   - これでfirebase周りはOK
   - gcloudは以下の流れで認証とdockerへの権限付与を行う
 
@@ -62,3 +62,5 @@ docker-compose -f .docker/docker-compose.dev.yml up
 ## アプリを落とすとき
 docker-compose -f .docker/docker-compose.dev.yml down
 ```
+
+- 注意: backendでmigration変更があったらmigrationsディレクトリを変更する

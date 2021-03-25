@@ -26,6 +26,7 @@ services:
       - MYSQL_USER=test
       - MYSQL_PASSWORD=test
     networks:
+      - db-network
       - api-network
   backend:
     image: asia.gcr.io/hacku-307702/backend:latest
@@ -46,6 +47,25 @@ services:
     restart: always
     networks:
       - api-network
+  migration:
+    image: asia.gcr.io/hacku-307702/migration:latest
+    environment:
+      - DB_DATABASE=test
+      - DB_USER=test
+      - DB_PASSWORD=test
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_ROOT_PASSWORD=testpass
+    volumes:
+      - ./script/dbconfig.yml:/work/dbconfig.yml
+      - ./migrations:/work/migrations
+    command: |
+      sql-migrate up
+    restart: on-failure
+    networks:
+      - db-network
 networks:
   api-network:
+    driver: bridge
+  db-network:
     driver: bridge

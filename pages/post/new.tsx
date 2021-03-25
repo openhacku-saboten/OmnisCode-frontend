@@ -84,7 +84,6 @@ const PostNew: NextPage = () => {
   }
 
   //markedを呼び出す
-  const marked = require('marked');
   const md2html = marked(mdCode);
 
   //投稿ボタンが押された時(本番)
