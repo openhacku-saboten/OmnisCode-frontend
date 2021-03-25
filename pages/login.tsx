@@ -3,7 +3,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { NextPage } from 'next';
 import React from 'react';
 import TwitterIcon from '@material-ui/icons/Twitter';
-import axios from 'axios';
+import axios from '../utils/axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
@@ -127,7 +127,7 @@ const Login: NextPage = () => {
         const auth_token = localStorage.getItem('Token');
         axios
           .post(
-            '/api/v1/user',
+            '/user',
             {
               name: userName,
               twitter_id: result.additionalUserInfo.username,
@@ -143,6 +143,7 @@ const Login: NextPage = () => {
           .then((res) => {
             console.log(res);
             console.log('新規ユーザーです。');
+            window.alert('ログインしました。');
             Router.push('/');
           })
           .catch((error) => {
@@ -150,12 +151,14 @@ const Login: NextPage = () => {
             console.log('Error msg : ' + error.response.data.message);
             if (
               error.response.data.message == 'twitter id is already used' ||
-              error.response.data.message == 'user already exists'
+              error.response.data.message == 'user already exists' ||
+              error.response.data.message == 'Unauthorized'
             ) {
               console.log('すでにログイン済みです。');
+              window.alert('ログインしました。');
               Router.push('/');
             } else {
-              window.alert('ユーザーのデータが不正です。');
+              window.alert('ログインに失敗しました。');
               Router.push('/login');
             }
           });
