@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start"
   },
@@ -13,7 +13,9 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@monaco-editor/react": "^4.1.0",
     "axios": "^0.21.1",
+    "express": "^4.17.1",
     "firebase": "^8.3.1",
+    "http-proxy-middleware": "^1.0.6",
     "marked": "^2.0.1",
     "next": "10.0.8",
     "react": "17.0.1",
