@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS posts (
     language   VARCHAR(128) NOT NULL,
     content    TEXT,
     source     VARCHAR(2048),
-    created_at DATETIME     NOT NULL,
-    updated_at DATETIME     NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 -- +migrate Down
