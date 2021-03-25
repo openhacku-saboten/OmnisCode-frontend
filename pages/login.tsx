@@ -3,7 +3,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { NextPage } from 'next';
 import React from 'react';
 import TwitterIcon from '@material-ui/icons/Twitter';
-
+import axios from 'axios'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
@@ -85,7 +85,7 @@ const Login: NextPage = () => {
         console.log('token:' + token);
         const secret = credential.secret;
         console.log('secret:' + secret);
-
+        console.log(result)
         // The signed-in user info.
         const user = result.user;
         console.log(user);
@@ -101,6 +101,12 @@ const Login: NextPage = () => {
         // ローカルストレージにuserIconImageの画像パスを保存
         localStorage.setItem('userIconImage', userIconImage);
 
+        // userIdはユーザーのログインid(サーバーに送信しない)
+        const userId = user.uid;
+        console.log(userId);
+        // ローカルストレージにuserIdを保存
+        localStorage.setItem('userId', userId);
+
         firebase
           .auth()
           .currentUser.getIdToken(/* forceRefresh */ true)
@@ -115,6 +121,21 @@ const Login: NextPage = () => {
             window.alert('error can not get current user:' + error);
           });
         // ...
+        const auth_token = localStorage.getItem('Token')
+        const BASE_URL = '/api/v1'
+        axios.post(`${BASE_URL}/user`, {
+          "name": userName,
+          "twitter_id": result.additionalUserInfo.username,
+          "profile": "this is your profile",
+          "icon_url": userIconImage,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${auth_token}`,
+            'Content-Type': 'application/json',
+          }
+        }).then(res => {
+          console.log(res)
+        })
       })
       .catch((error) => {
         // Handle Errors here.

@@ -101,11 +101,16 @@ const isNumber = (s: string): boolean => {
   return /^\d+$/.test(s);
 };
 
+type PostInformation = {
+  post: Comment;
+  post_id: number;
+};
+
 export const getServerSideProps = ({
   params,
 }: GetServerSidePropsContext): RequireOne<{
   notFound?: boolean;
-  props?: { post: Comment; post_id: number };
+  props?: PostInformation;
 }> => {
   const postid = params.postid as string;
   if (!isNumber(postid)) {
@@ -131,15 +136,14 @@ export const getServerSideProps = ({
   };
 };
 
-const PostDetail: NextPage = (props) => {
+const PostDetail: NextPage<PostInformation> = ({
+  post,
+  post_id,
+}: PostInformation) => {
   const styles = useStyles();
 
   const theme = useTheme();
   const isXsSm = useMediaQuery(theme.breakpoints.down('sm'));
-
-  // TODO: resolve error
-  const post = props.post as Comment;
-  const post_id = props.post_id;
 
   // TODO: 自身のuser_idとpost.user_idを比較
   const isMyPost = true;

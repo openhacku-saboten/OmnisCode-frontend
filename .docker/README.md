@@ -54,6 +54,7 @@ gcloud auth configure-docker
 ```shell
 ## OmnisCode-frontend$ で
 ## アプリを立ち上げる時
+docker-compose -f .docker/docker-compose.dev.yml pull # バックエンドの最新イメージをとってくる
 docker-compose -f .docker/docker-compose.dev.yml up
 # localhost:3000でアクセスできる。localhost:8080でバックエンドにアクセス
 # バックエンドは backend:8080 でアクセスできる
@@ -64,3 +65,4 @@ docker-compose -f .docker/docker-compose.dev.yml down
 ```
 
 - 注意: backendでmigration変更があったらmigrationsディレクトリを変更する
+- 注意: package.jsonなど再度のビルドが必要なら `docker-compose -f .docker/docker-compose.dev.yml up --build` を行う
