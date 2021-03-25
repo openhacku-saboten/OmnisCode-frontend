@@ -1,5 +1,7 @@
 import { Avatar, Box, Card, Divider, Grid } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import axios from '../utils/axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,8 +71,34 @@ type Props = {
   source: string;
 };
 
+type GetUserById = {
+  id: string;
+  name: string;
+  twitter_id: string;
+  profile: string;
+  icon_url: string;
+};
+
 const PostCard: React.FC<Props> = (props) => {
   const styles = useStyles();
+
+  const [userInfo, setUserInfo] = useState<GetUserById>({
+    id: '',
+    name: '',
+    twitter_id: '',
+    profile: '',
+    icon_url: '',
+  });
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`/user/${props.user_id}`);
+        setUserInfo(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [props.user_id]);
 
   return (
     <Card className={styles.card}>
@@ -78,10 +106,10 @@ const PostCard: React.FC<Props> = (props) => {
         <Grid item className={styles.header}>
           <Grid container>
             <Grid item>
-              <Avatar className={styles.icon}>X</Avatar>
+              <Avatar className={styles.icon} src={userInfo.icon_url} />
             </Grid>
             <Grid item className={styles.username}>
-              username
+              {userInfo.name ?? ''}
             </Grid>
             <Grid item className={styles.postdate}>
               2000-01-01に投稿
