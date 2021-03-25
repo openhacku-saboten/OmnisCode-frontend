@@ -101,6 +101,12 @@ const Login: NextPage = () => {
         // ローカルストレージにuserIconImageの画像パスを保存
         localStorage.setItem('userIconImage', userIconImage);
 
+        // userIdはユーザーのログインid(サーバーに送信しない)
+        const userId = user.uid;
+        console.log(userId);
+        // ローカルストレージにuserIdを保存
+        localStorage.setItem('userId', userId);
+
         firebase
           .auth()
           .currentUser.getIdToken(/* forceRefresh */ true)
