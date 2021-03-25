@@ -1,10 +1,10 @@
 export function UserName(): JSX.Element {
   const userName = localStorage.getItem('userName');
-  const idToken = localStorage.getItem('Token');
+  const userId = localStorage.getItem('userId');
   if (userName) {
     return (
       <p style={{ fontSize: 'medium' }}>
-        <a href={'/user/' + idToken}>{userName}</a>
+        <a href={'/user/' + userId}>{userName}</a>
       </p>
     );
   } else {
