@@ -3,9 +3,11 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { NextPage } from 'next';
 import React from 'react';
 import TwitterIcon from '@material-ui/icons/Twitter';
-import axios from 'axios'
+import axios from 'axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+
+import Router from 'next/router';
 
 import { firebaseConfig } from '../utils/firebaseConfig';
 
@@ -85,7 +87,7 @@ const Login: NextPage = () => {
         console.log('token:' + token);
         const secret = credential.secret;
         console.log('secret:' + secret);
-        console.log(result)
+        console.log(result);
         // The signed-in user info.
         const user = result.user;
         console.log(user);
@@ -121,21 +123,42 @@ const Login: NextPage = () => {
             window.alert('error can not get current user:' + error);
           });
         // ...
-        const auth_token = localStorage.getItem('Token')
-        const BASE_URL = '/api/v1'
-        axios.post(`${BASE_URL}/user`, {
-          "name": userName,
-          "twitter_id": result.additionalUserInfo.username,
-          "profile": "this is your profile",
-          "icon_url": userIconImage,
-        }, {
-          headers: {
-            'Authorization': `Bearer ${auth_token}`,
-            'Content-Type': 'application/json',
-          }
-        }).then(res => {
-          console.log(res)
-        })
+        // API通信
+        const auth_token = localStorage.getItem('Token');
+        axios
+          .post(
+            '/api/v1/user',
+            {
+              name: userName,
+              twitter_id: result.additionalUserInfo.username,
+              profile: 'this is your profile',
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${auth_token}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            console.log('新規ユーザーです。');
+            Router.push('/');
+          })
+          .catch((error) => {
+            console.log('Error : ' + JSON.stringify(error.response));
+            console.log('Error msg : ' + error.response.data.message);
+            if (
+              error.response.data.message == 'twitter id is already used' ||
+              error.response.data.message == 'user already exists'
+            ) {
+              console.log('すでにログイン済みです。');
+              Router.push('/');
+            } else {
+              window.alert('ユーザーのデータが不正です。');
+              Router.push('/login');
+            }
+          });
       })
       .catch((error) => {
         // Handle Errors here.
