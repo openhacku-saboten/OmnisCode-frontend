@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS comments (
     first_line INTEGER,
     last_line  INTEGER,
     code       TEXT,
-    created_at DATETIME     NOT NULL,
-    updated_at DATETIME     NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id, post_id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
