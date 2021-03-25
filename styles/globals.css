@@ -8,7 +8,10 @@ body {
 
 a {
   color: inherit;
-  text-decoration: none;
+}
+
+code:not([class]) {
+  background-color: #eeeeee;
 }
 
 * {
