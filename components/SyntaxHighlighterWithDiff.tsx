@@ -43,6 +43,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
         <SyntaxHighlighter
           language={props.language}
           style={atomDarkWithoutMargin}
+          customStyle={{ maxHeight: '50vh' }}
           showLineNumbers>
           {props.code}
         </SyntaxHighlighter>
@@ -61,6 +62,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
           showLineNumbers
           startingLineNumber={startingLineNumber}
           wrapLines={true}
+          customStyle={{ maxHeight: '50vh' }}
           lineProps={(lineNumber) => {
             const style: {
               display: string;
@@ -125,6 +127,7 @@ const SyntaxHighlighterWithDiff: React.FC<Props> = (props) => {
           style={atomDarkWithoutMargin}
           showLineNumbers
           wrapLines={true}
+          customStyle={{ maxHeight: '50vh' }}
           lineProps={(lineNumber) => {
             const style: {
               display: string;

@@ -68,10 +68,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     modalCard: {
       backgroundColor: theme.palette.background.default,
-      padding: '0px',
+      paddingTop: '16px',
       height: '100%',
+      overflow: 'auto',
       display: 'flex',
-      justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
     },
