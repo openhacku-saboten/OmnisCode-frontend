@@ -12,9 +12,17 @@ import {
   Container,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+
+import dynamic from 'next/dynamic';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
+  const DynamicComponentUserName = dynamic(() =>
+    import('../components/UserName').then((mod) => mod.UserName)
+  );
+  const DynamicComponentUserIconImage = dynamic(() =>
+    import('../components/UserIconImage').then((mod) => mod.UserIconImage)
+  );
+
   return (
     <>
       <AppBar position="static">
@@ -30,8 +38,10 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               color="inherit">
-              <AccountCircle fontSize="large" style={{ marginRight: '10px' }} />
-              <p style={{ fontSize: 'medium' }}>UserName</p>
+              {/* ログイン済みならtwitterアイコンを表示 / ログインしていなかったら人アイコン*/}
+              <DynamicComponentUserIconImage />
+              {/* ログイン済みならtwitterの名前を表示 / ログインしていなかったらゲストユーザー*/}
+              <DynamicComponentUserName />
             </IconButton>
           </Grid>
         </Toolbar>
