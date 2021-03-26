@@ -68,6 +68,7 @@ const Home: NextPage = () => {
                   <Grid item xs={12} md={6} key={idx_j}>
                     <PostCard
                       user_id={post.user_id}
+                      post_id={post.id}
                       title={post.title}
                       code={post.code}
                       language={post.language}
