@@ -140,49 +140,49 @@ const Login: NextPage = () => {
             console.log(idToken);
             //ローカルストレージにTokenを保存
             localStorage.setItem('Token', idToken);
+            // API通信
+            const auth_token = idToken;
+            axios
+              .post(
+                '/user',
+                {
+                  name: userName,
+                  twitter_id: result.additionalUserInfo.username,
+                  profile: 'this is your profile',
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${auth_token}`,
+                    'Content-Type': 'application/json',
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+                console.log('新規ユーザーです。');
+                window.alert('ログインしました。');
+                Router.push('/');
+              })
+              .catch((error) => {
+                console.log('Error : ' + JSON.stringify(error.response));
+                console.log('Error msg : ' + error.response.data.message);
+                if (
+                  error.response.data.message == 'twitter id is already used' ||
+                  error.response.data.message == 'user already exists'
+                ) {
+                  console.log('すでにログイン済みです。');
+                  window.alert('ログインしました。');
+                  Router.push('/');
+                } else {
+                  window.alert('ログインに失敗しました。');
+                  Router.push('/login');
+                }
+              });
           })
           .catch(function (error) {
             window.alert('error can not get current user:' + error);
           });
         // ...
-        // API通信
-        const auth_token = localStorage.getItem('Token');
-        axios
-          .post(
-            '/user',
-            {
-              name: userName,
-              twitter_id: result.additionalUserInfo.username,
-              profile: 'this is your profile',
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${auth_token}`,
-                'Content-Type': 'application/json',
-              },
-            }
-          )
-          .then((res) => {
-            console.log(res);
-            console.log('新規ユーザーです。');
-            window.alert('ログインしました。');
-            Router.push('/');
-          })
-          .catch((error) => {
-            console.log('Error : ' + JSON.stringify(error.response));
-            console.log('Error msg : ' + error.response.data.message);
-            if (
-              error.response.data.message == 'twitter id is already used' ||
-              error.response.data.message == 'user already exists'
-            ) {
-              console.log('すでにログイン済みです。');
-              window.alert('ログインしました。');
-              Router.push('/');
-            } else {
-              window.alert('ログインに失敗しました。');
-              Router.push('/login');
-            }
-          });
       })
       .catch((error) => {
         // Handle Errors here.
