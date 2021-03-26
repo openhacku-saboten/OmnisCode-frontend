@@ -17,6 +17,10 @@ import Fade from '@material-ui/core/Fade';
 
 import marked from 'marked';
 
+import axios from '../../utils/axios';
+
+import Router from 'next/router';
+
 import { langs } from '../../utils/language';
 
 const PostNew: NextPage = () => {
@@ -88,20 +92,32 @@ const PostNew: NextPage = () => {
 
   //投稿ボタンが押された時(本番)
   function submit(): void {
-    const inputElement = document.getElementById(
+    const inputElementURL = document.getElementById(
       'textareaURL'
     ) as HTMLInputElement;
-    const inputValueURL = inputElement.value;
+    const inputValueURL = inputElementURL.value;
 
-    //URLが正しいかを判定
-    const regex = new RegExp(
-      '(https?://([\\w-]+\\.)+[\\w-]+(/[\\w- .?%&=]*)?)'
-    );
-    const flagURL = regex.test(inputValueURL);
+    const inputElementTitle = document.getElementById(
+      'textareaTitle'
+    ) as HTMLInputElement;
+    const inputValueTitle = inputElementTitle.value;
+
+    //URLが入力されていたら
+    if (inputValueURL) {
+      //URLが正しいかを判定
+      const regex = new RegExp(
+        '(https?://([\\w-]+\\.)+[\\w-]+(/[\\w- .?%&=]*)?)'
+      );
+      const flagURL = regex.test(inputValueURL);
+      if (flagURL == false) {
+        window.alert('入力されたURLが不正です。');
+        return;
+      }
+    }
 
     //入力された文字をチェックする。
-    if (flagURL == false) {
-      window.alert('入力されたURLが不正です。');
+    if (!inputValueTitle) {
+      window.alert('タイトルが入力されていません。');
       return;
     }
     if (code == '') {
@@ -113,19 +129,36 @@ const PostNew: NextPage = () => {
       return;
     }
 
-    alert(
-      'URL:' +
-        inputValueURL +
-        '\n' +
-        '言語:' +
-        language +
-        '\n' +
-        'コード:' +
-        code +
-        '\n' +
-        '説明:' +
-        mdCode
-    );
+    //API通信を実装
+    const auth_token = localStorage.getItem('Token');
+
+    axios
+      .post(
+        '/post',
+        {
+          title: inputValueTitle,
+          code: code,
+          language: language,
+          content: mdCode,
+          source: inputValueURL,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        window.alert('投稿が完了しました。');
+        Router.push('/');
+      })
+      .catch((error) => {
+        console.log('Error : ' + JSON.stringify(error.response));
+        console.log('Error msg : ' + error.response.data.message);
+        window.alert('投稿に失敗しました。');
+      });
   }
 
   return (
@@ -147,11 +180,20 @@ const PostNew: NextPage = () => {
       <Grid container alignItems="center" justify="center">
         <Grid item sm={7}>
           <h1>投稿ページ</h1>
-          <h3>1. 競技プログラミングの問題のリンクを入力</h3>
+
+          <h3>1.質問のタイトルを入力</h3>
+
+          <TextField
+            id="textareaTitle"
+            style={{ width: '100%' }}
+            label="タイトル"
+          />
+
+          <h3>2. ソースコードの出典を入力(任意)</h3>
 
           <TextField id="textareaURL" style={{ width: '100%' }} label="URL" />
 
-          <h3>2. コードを入力</h3>
+          <h3>3. コードを入力</h3>
 
           <div style={{ marginBottom: '15px' }}>
             <FormControl style={{ width: '30%' }}>
@@ -183,7 +225,7 @@ const PostNew: NextPage = () => {
             defaultValue="// コードを入力してください。"
           />
 
-          <h3>3. 説明文を入力</h3>
+          <h3>4. 説明文を入力</h3>
 
           <Button
             size="small"

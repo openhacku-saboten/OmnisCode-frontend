@@ -3,9 +3,11 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { NextPage } from 'next';
 import React from 'react';
 import TwitterIcon from '@material-ui/icons/Twitter';
-import axios from 'axios'
+import axios from '../utils/axios';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+
+import Router from 'next/router';
 
 import { firebaseConfig } from '../utils/firebaseConfig';
 
@@ -15,6 +17,8 @@ import { firebaseConfig } from '../utils/firebaseConfig';
  * userNameはtwitterのユーザー名(bodyに入れてサーバーに送信)
  * ⇒ 以上の2つの情報をサーバーに送信する
  */
+// 100行目のrefreshTokenはトークンを再発行させるために使う
+//firebaseのトークンは24時間で更新される
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,7 +89,7 @@ const Login: NextPage = () => {
         console.log('token:' + token);
         const secret = credential.secret;
         console.log('secret:' + secret);
-        console.log(result)
+        console.log(result);
         // The signed-in user info.
         const user = result.user;
         console.log(user);
@@ -94,6 +98,24 @@ const Login: NextPage = () => {
         console.log(userName);
         // ローカルストレージにuserNameを保存
         localStorage.setItem('userName', userName);
+
+        // refreshTokenはトークンを再発行させるために使う
+        const refreshToken = user.refreshToken;
+        console.log('refreshToken : ' + refreshToken);
+        // ローカルストレージにrefreshTokenを保存
+        localStorage.setItem('refreshToken', refreshToken);
+
+        // // 現在時刻(トークンを生成させるたびに時刻を更新)を保存
+        // const getTokenTime = new Date().getTime();
+        // console.log('getTokenTime : ' + getTokenTime);
+
+        //トークンが更新される(無効になる)であろう時刻
+        const timeSet = 12 * 60 * 60 * 1000;
+        const lostTokenTime = String(new Date().getTime() + timeSet);
+        console.log('lostTokenTime : ' + lostTokenTime);
+
+        // ローカルストレージにrefreshTokenを保存
+        localStorage.setItem('lostTokenTime', lostTokenTime);
 
         // userIconImageはtwitterのアイコン画像(サーバーに送信しない)
         const userIconImage = user.photoURL;
@@ -121,21 +143,44 @@ const Login: NextPage = () => {
             window.alert('error can not get current user:' + error);
           });
         // ...
-        const auth_token = localStorage.getItem('Token')
-        const BASE_URL = '/api/v1'
-        axios.post(`${BASE_URL}/user`, {
-          "name": userName,
-          "twitter_id": result.additionalUserInfo.username,
-          "profile": "this is your profile",
-          "icon_url": userIconImage,
-        }, {
-          headers: {
-            'Authorization': `Bearer ${auth_token}`,
-            'Content-Type': 'application/json',
-          }
-        }).then(res => {
-          console.log(res)
-        })
+        // API通信
+        const auth_token = localStorage.getItem('Token');
+        axios
+          .post(
+            '/user',
+            {
+              name: userName,
+              twitter_id: result.additionalUserInfo.username,
+              profile: 'this is your profile',
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${auth_token}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            console.log('新規ユーザーです。');
+            window.alert('ログインしました。');
+            Router.push('/');
+          })
+          .catch((error) => {
+            console.log('Error : ' + JSON.stringify(error.response));
+            console.log('Error msg : ' + error.response.data.message);
+            if (
+              error.response.data.message == 'twitter id is already used' ||
+              error.response.data.message == 'user already exists'
+            ) {
+              console.log('すでにログイン済みです。');
+              window.alert('ログインしました。');
+              Router.push('/');
+            } else {
+              window.alert('ログインに失敗しました。');
+              Router.push('/login');
+            }
+          });
       })
       .catch((error) => {
         // Handle Errors here.
