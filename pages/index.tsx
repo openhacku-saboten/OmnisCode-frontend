@@ -21,7 +21,7 @@ const Home: NextPage = () => {
     (async () => {
       try {
         const res = await axios.get('/post');
-        setPosts(res.data);
+        setPosts(res.data.reverse());
       } catch (err) {
         console.log(err);
       }
