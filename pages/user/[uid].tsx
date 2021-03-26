@@ -20,6 +20,8 @@ import {
 } from '@material-ui/core';
 import PostCard from '../../components/PostCard';
 import { Comment } from '../../src/type';
+import axios from '../../utils/axios';
+import Router from 'next/router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -146,8 +148,29 @@ const PostDetail: NextPage = () => {
     );
 
   const updateUserProfile = (userName: string, userProfile: string): void => {
-    console.log(userName);
-    console.log(userProfile);
+    axios
+      .put(
+        `/user`,
+        {
+          name: userName,
+          profile: userProfile,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('Token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .then(() => {
+        alert('プロフィールが更新されました');
+        localStorage.setItem('userName', userName);
+        Router.reload();
+      })
+      .catch((err) => {
+        alert('プロフィールの更新に失敗しました');
+        console.log(`catch: ${err}`);
+      });
   };
 
   const editProfileModal: React.FC<Record<string, never>> = () => {
