@@ -2,7 +2,6 @@ import { NextPage } from 'next';
 import { Grid, TextField, Button } from '@material-ui/core';
 import React from 'react';
 
-import CustomHead from '../components/CustomHead';
 import DefaultHead from '../components/DefaultHead';
 
 /**
