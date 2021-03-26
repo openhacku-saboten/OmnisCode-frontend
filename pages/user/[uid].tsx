@@ -115,6 +115,7 @@ const PostDetail: NextPage = () => {
 
   const res_user = useSWR(`/user/${uid}`, fetcher);
   const res_post = useSWR(`/user/${uid}/post`, fetcher);
+  const post404 = res_post.error?.response?.statusText === 'Not Found';
 
   useEffect(() => {
     if (!res_user.error && res_user.data) {
@@ -131,10 +132,10 @@ const PostDetail: NextPage = () => {
     return <>Loading...</>;
   }
 
-  if (res_post.error) {
+  if (res_post.error && !post404) {
     return <>Error</>;
   }
-  const postData = res_post.data as Comment[];
+  const postData = (post404 ? [] : res_post.data) as Comment[];
   if (!postData) {
     return <>Loading...</>;
   }
