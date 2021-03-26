@@ -220,12 +220,14 @@ const PostDetail: NextPage = () => {
         return (
           <CommentCard
             type="highlight"
-            user_id="TODO"
+            user_id={myUserId}
             content={comment}
             language={post.language}
             code={newest_code}
             first_line={highlightFrom}
             last_line={highlightTo}
+            created_at={new Date().toISOString()}
+            updated_at={new Date().toISOString()}
           />
         );
       }
@@ -233,16 +235,26 @@ const PostDetail: NextPage = () => {
         return (
           <CommentCard
             type="commit"
-            user_id="TODO"
+            user_id={myUserId}
             content={comment}
             language={post.language}
             code={committingCode}
             old_code={newest_code}
+            created_at={new Date().toISOString()}
+            updated_at={new Date().toISOString()}
           />
         );
       }
     }
-    return <CommentCard type="none" user_id="TODO" content={comment} />;
+    return (
+      <CommentCard
+        type="none"
+        user_id={myUserId}
+        content={comment}
+        created_at={new Date().toISOString()}
+        updated_at={new Date().toISOString()}
+      />
+    );
   };
 
   const previewModal: React.FC<Record<string, never>> = () => {
@@ -476,6 +488,8 @@ const PostDetail: NextPage = () => {
                     language={post.language}
                     source={post.source}
                     is_post_user={true}
+                    created_at={post.created_at}
+                    updated_at={post.updated_at}
                   />
                 </Grid>
                 {comments.map((comment, idx) => {
@@ -495,6 +509,8 @@ const PostDetail: NextPage = () => {
                       last_line={comment.last_line}
                       old_code={old_code}
                       is_post_user={post.user_id === comment.user_id}
+                      created_at={comment.created_at}
+                      updated_at={comment.updated_at}
                       key={idx}
                     />
                   );
@@ -522,6 +538,8 @@ const PostDetail: NextPage = () => {
                     language={post.language}
                     source={post.source}
                     is_post_user={true}
+                    created_at={post.created_at}
+                    updated_at={post.updated_at}
                   />
                 </TimelineContent>
               </TimelineItem>
@@ -558,6 +576,8 @@ const PostDetail: NextPage = () => {
                         last_line={comment.last_line}
                         old_code={old_code}
                         is_post_user={post.user_id === comment.user_id}
+                        created_at={comment.created_at}
+                        updated_at={comment.updated_at}
                       />
                     </TimelineContent>
                   </TimelineItem>

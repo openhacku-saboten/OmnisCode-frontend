@@ -25,4 +25,7 @@ export type Comment = {
   last_line?: number;
   // for 'commit'
   old_code?: string;
+  // date
+  created_at: string;
+  updated_at: string;
 };

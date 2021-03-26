@@ -3,6 +3,7 @@ import { createStyles, makeStyles } from '@material-ui/core';
 import { Comment } from '../src/type';
 import SyntaxHighlighterWithDiff from '../components/SyntaxHighlighterWithDiff';
 import marked from 'marked';
+import zeroPadding from '../utils/zeroPadding';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -50,6 +51,7 @@ interface CommentWithAvatar extends Comment {
 
 const CommentCard: React.FC<CommentWithAvatar> = (props) => {
   const styles = useStyles();
+  const created_at_date = new Date(props.created_at);
   return (
     <Card className={styles.card}>
       <Grid container direction="column">
@@ -81,7 +83,11 @@ const CommentCard: React.FC<CommentWithAvatar> = (props) => {
             )}
             <Grid item className={styles.postTime}>
               {props.user_id} さん {props.is_post_user ? ' (投稿者)' : ''} が
-              2000-01-01 00:00 に投稿
+              {zeroPadding(created_at_date.getFullYear(), 4)}-
+              {zeroPadding(created_at_date.getMonth() + 1, 2)}-
+              {zeroPadding(created_at_date.getDate(), 2)}{' '}
+              {zeroPadding(created_at_date.getHours(), 2)}:
+              {zeroPadding(created_at_date.getMinutes(), 2)} に投稿
             </Grid>
           </Grid>
         </Grid>
