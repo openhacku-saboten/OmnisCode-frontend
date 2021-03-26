@@ -69,6 +69,7 @@ type Props = {
   language: string;
   content: string;
   source: string;
+  created_at: string;
 };
 
 type GetUserById = {
@@ -77,6 +78,10 @@ type GetUserById = {
   twitter_id: string;
   profile: string;
   icon_url: string;
+};
+
+const zeroPadding = (s: number, len: number): string => {
+  return ('0'.repeat(len) + s).slice(-len);
 };
 
 const PostCard: React.FC<Props> = (props) => {
@@ -100,6 +105,8 @@ const PostCard: React.FC<Props> = (props) => {
     })();
   }, [props.user_id]);
 
+  const created_at_date = new Date(props.created_at);
+
   return (
     <Card className={styles.card}>
       <Grid container>
@@ -112,7 +119,11 @@ const PostCard: React.FC<Props> = (props) => {
               {userInfo.name ?? ''}
             </Grid>
             <Grid item className={styles.postdate}>
-              2000-01-01に投稿
+              {zeroPadding(created_at_date.getFullYear(), 4)}-
+              {zeroPadding(created_at_date.getMonth() + 1, 2)}-
+              {zeroPadding(created_at_date.getDate(), 2)}{' '}
+              {zeroPadding(created_at_date.getHours(), 2)}:
+              {zeroPadding(created_at_date.getMinutes(), 2)}に投稿
             </Grid>
           </Grid>
         </Grid>

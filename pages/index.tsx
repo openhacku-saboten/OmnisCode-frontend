@@ -73,6 +73,7 @@ const Home: NextPage = () => {
                       language={post.language}
                       content={post.content}
                       source={post.source}
+                      created_at={post.created_at}
                     />
                   </Grid>
                 ))}
