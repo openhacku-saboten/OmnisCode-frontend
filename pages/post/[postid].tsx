@@ -37,6 +37,7 @@ import useSWR from 'swr';
 import fetcher from '../../utils/fetcher';
 import { useRouter } from 'next/router';
 import axios from '../../utils/axios';
+import UserIcon from '../../components/UserIcon';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -506,9 +507,10 @@ const PostDetail: NextPage = () => {
               <TimelineItem>
                 <TimelineOppositeContent className={styles.oppositeContent} />
                 <TimelineSeparator>
-                  <Avatar className={`${styles.icon} ${styles.postUserIcon}`}>
-                    {post.user_id}
-                  </Avatar>
+                  <UserIcon
+                    className={`${styles.icon} ${styles.postUserIcon}`}
+                    user_id={post.user_id}
+                  />
                   <TimelineConnector />
                 </TimelineSeparator>
                 <TimelineContent>
@@ -534,14 +536,14 @@ const PostDetail: NextPage = () => {
                       className={styles.oppositeContent}
                     />
                     <TimelineSeparator>
-                      <Avatar
+                      <UserIcon
+                        user_id={post.user_id}
                         className={`${styles.icon} ${
                           myUserId === comment.user_id
                             ? styles.postUserIcon
                             : ''
-                        }`}>
-                        {comment.user_id}
-                      </Avatar>
+                        }`}
+                      />
                       <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
