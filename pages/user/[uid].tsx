@@ -8,7 +8,10 @@ import fetcher from '../../utils/fetcher';
 import {
   Avatar,
   Box,
+  Button,
+  Card,
   Container,
+  Dialog,
   Grid,
   Typography,
   useMediaQuery,
@@ -20,13 +23,9 @@ import { Comment } from '../../src/type';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     profileArea: {
-      maxHeight: 256,
+      maxHeight: 512,
       paddingTop: 64,
-      paddingBottom: 128,
-      display: '-webkit-box',
-      '-webkit-line-clamp': 5,
-      '-webkit-box-orient': 'vertical',
-      overflow: 'hidden',
+      paddingBottom: 48,
     },
     userName: {
       fontSize: 48,
@@ -36,7 +35,14 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     userProfile: {
+      marginTop: 24,
       fontSize: 24,
+      display: '-webkit-box',
+      width: '100%',
+      wordBreak: 'break-all',
+      '-webkit-line-clamp': 5,
+      '-webkit-box-orient': 'vertical',
+      overflow: 'hidden',
     },
     userIcon: {
       width: 64,
@@ -48,6 +54,23 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: 24,
       fontSize: 64,
       fontWeight: 'bold',
+    },
+    dialog: {
+      margin: '0px',
+      borderRadius: '1rem',
+    },
+    modalCard: {
+      backgroundColor: theme.palette.background.default,
+      paddingTop: '16px',
+      height: '100%',
+      overflow: 'auto',
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'column',
+    },
+    editButton: {
+      maxWidth: 256,
+      fontSize: 16,
     },
   })
 );
@@ -62,6 +85,8 @@ const PostDetail: NextPage = () => {
   const cardsPerRow = isXsSm ? 1 : 2;
   const [pageNum, setPageNum] = useState(1);
 
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -70,8 +95,8 @@ const PostDetail: NextPage = () => {
   };
 
   // ad-hocすぎる...
-  const uid = router.query.uid;
-  // const uid = id === undefined ? '1' : id;
+  const id = router.query.uid;
+  const uid = id === undefined ? '1' : id;
 
   const res_user = useSWR(`/user/${uid}`, fetcher);
   const res_post = useSWR(`/user/${uid}/post`, fetcher);
@@ -100,6 +125,17 @@ const PostDetail: NextPage = () => {
       [] as T[][]
     );
 
+  const editProfileModal: React.FC<Record<string, never>> = () => {
+    return (
+      <>
+        <Card className={styles.modalCard}>
+          <h1>プロフィールを編集</h1>
+          <Box>hoge</Box>
+        </Card>
+      </>
+    );
+  };
+
   return (
     <>
       <Container style={{ marginTop: '30px', marginBottom: '60px' }}>
@@ -110,6 +146,25 @@ const PostDetail: NextPage = () => {
             className={styles.userIcon}
           />
           <Typography className={styles.userName}>{userData.name}</Typography>
+          <Button
+            className={styles.editButton}
+            variant="contained"
+            color="primary"
+            onClick={() => setModalOpen(true)}
+            fullWidth>
+            プロフィールを編集
+          </Button>
+          <Dialog
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            className={styles.dialog}
+            fullWidth
+            maxWidth="md"
+            PaperProps={{
+              style: { borderRadius: '0.5rem' },
+            }}>
+            {editProfileModal({})}
+          </Dialog>
           <Typography className={styles.userProfile}>
             {userData.profile}
           </Typography>
