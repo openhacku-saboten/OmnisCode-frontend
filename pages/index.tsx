@@ -45,7 +45,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <DefaultHead pageName="login" />
+      <DefaultHead pageName="" />
       <Box m={4}>
         <Container style={{ marginTop: '30px' }}>
           <h1>投稿一覧</h1>
