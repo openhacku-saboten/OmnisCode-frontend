@@ -153,7 +153,9 @@ const PostNew: NextPage = () => {
       .then((res) => {
         console.log(res);
         window.alert('投稿が完了しました。');
-        Router.push('/');
+        console.log(res.data.id);
+        //記事詳細ページに遷移させる
+        Router.push('/post/' + res.data.id);
       })
       .catch((error) => {
         console.log('Error : ' + JSON.stringify(error.response));
