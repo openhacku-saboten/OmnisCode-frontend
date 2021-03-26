@@ -13,6 +13,7 @@ import { id2ogp } from '../utils/language';
 import cutHeadLines from '../utils/cutHeadLines';
 import useSWR from 'swr';
 import fetcher from '../utils/fetcher';
+import zeroPadding from '../utils/zeroPadding';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -88,10 +89,6 @@ type Props = {
   content: string;
   source: string;
   created_at: string;
-};
-
-const zeroPadding = (s: number, len: number): string => {
-  return ('0'.repeat(len) + s).slice(-len);
 };
 
 const PostCard: React.FC<Props> = (props) => {

@@ -20,7 +20,7 @@ import {
   TimelineOppositeContent,
   TimelineConnector,
 } from '@material-ui/lab';
-import { NextPage, GetServerSidePropsContext } from 'next';
+import { NextPage } from 'next';
 import Head from 'next/head';
 import {
   makeStyles,
@@ -29,10 +29,15 @@ import {
   useTheme,
 } from '@material-ui/core/styles';
 import CommentCard from '../../components/CommentCard';
-import { RequireOne, Comment, CommentType } from '../../src/type';
-import React, { useState } from 'react';
+import { CommentType } from '../../src/type';
+import React, { useEffect, useState, useMemo } from 'react';
 import Editor from '@monaco-editor/react';
 import AddIcon from '@material-ui/icons/Add';
+import useSWR from 'swr';
+import fetcher from '../../utils/fetcher';
+import { useRouter } from 'next/router';
+import axios from '../../utils/axios';
+import UserIcon from '../../components/UserIcon';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,11 +55,11 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginTop: '8px',
       marginBottom: '8px',
-      width: '48px',
-      height: '48px',
+      width: '64px',
+      height: '64px',
     },
     postUserIcon: {
-      border: `3px solid ${theme.palette.secondary.main}`,
+      border: `2px solid ${theme.palette.secondary.main}`,
     },
     checkbox: {
       marginLeft: '8px',
@@ -97,124 +102,82 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const isNumber = (s: string): boolean => {
-  return /^\d+$/.test(s);
-};
-
-type PostInformation = {
-  post: Comment;
-  post_id: number;
-};
-
-export const getServerSideProps = ({
-  params,
-}: GetServerSidePropsContext): RequireOne<{
-  notFound?: boolean;
-  props?: PostInformation;
-}> => {
-  const postid = params.postid as string;
-  if (!isNumber(postid)) {
-    return { notFound: true };
-  }
-
-  // dummy
-  return {
-    props: {
-      post: {
-        type: 'post', // 自分で付与する
-        user_id: 'lion',
-        title: 'なんか通らない' + postid,
-        code:
-          '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    cout << "Hello" << endl;\n}\n',
-        language: 'cpp',
-        content:
-          'このコードだと<https://example.com/problem>の問題が通りません。\n\nどうしたらよいでしょうか？',
-        source: 'https://example.com/code',
-      },
-      post_id: Number(postid),
-    },
-  };
-};
-
-const PostDetail: NextPage<PostInformation> = ({
-  post,
-  post_id,
-}: PostInformation) => {
+const PostDetail: NextPage = () => {
   const styles = useStyles();
+  const router = useRouter();
+
+  // ad-hocすぎる...
+  const id = router.query.postid;
+  const postid = id === undefined ? 1 : id;
 
   const theme = useTheme();
   const isXsSm = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // TODO: 自身のuser_idとpost.user_idを比較
-  const isMyPost = true;
-  const myUserId = 'lion';
+  const res_post = useSWR(`/post/${postid}`, fetcher);
+  const res_comment = useSWR(`/post/${postid}/comment`, fetcher);
 
-  // dummy
-  const comments: Comment[] = [
-    {
-      user_id: 'cake',
-      post_id: post_id,
-      type: 'highlight',
-      content: 'ここは`Hello`ではなくて、`Hello World`じゃないでしょうか？',
-      first_line: 5,
-      last_line: 5,
-      code: '',
-    },
-    {
-      user_id: 'dog',
-      post_id: post_id,
-      type: 'none',
-      content: '僕もそう思います',
-      first_line: 0,
-      last_line: 0,
-      code: '',
-    },
-    {
-      user_id: 'lion',
-      post_id: post_id,
-      type: 'commit',
-      content: 'こういうことですか？',
-      first_line: 0,
-      last_line: 0,
-      code:
-        '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    cout << "Hello World" << endl;\n}\n',
-    },
-    {
-      user_id: 'dog',
-      post_id: post_id,
-      type: 'none',
-      content: 'そうです',
-      first_line: 0,
-      last_line: 0,
-      code: '',
-    },
-  ];
+  const [comment, setComment] = useState<string>('## コメント');
+  const [isHighlight, setIsHighlight] = useState<boolean>(false);
+  const [highlightFrom, setHighlightFrom] = useState<number>(1);
+  const [highlightTo, setHighlightTo] = useState<number>(1);
+  const [isCommit, setIsCommit] = useState<boolean>(false);
+  const [committingCode, setCommittingCode] = useState<string>('');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  // その時点での最新のコード
-  let cur_code = post.code;
+  const post = res_post.data;
+  const comment404 = res_comment.error?.response?.statusText === 'Not Found';
+  const comments = useMemo(() => (comment404 ? [] : res_comment.data), [
+    comment404,
+    res_comment,
+  ]);
 
   // 最後にコミットされたコード
-  const newest_code = [{ ...post, type: 'commit' }, ...comments]
+  const newest_code = [{ ...post, type: 'commit' }, ...(comments ?? [])]
     .filter((comment) => {
       return comment.type === 'commit';
     })
     .slice(-1)[0].code;
+
+  useEffect(() => {
+    setCommittingCode(newest_code);
+  }, [setCommittingCode, newest_code]);
+
+  if (postid === '[postid]') {
+    return <Box>Loading...</Box>;
+  } else {
+    // GET /post/{postid}
+    if (res_post.error) {
+      router.push('/404');
+      return <Box>Error</Box>;
+    }
+    if (!post) {
+      return <Box>Loading...</Box>;
+    }
+
+    // GET /post/{postid}/comment
+    if (res_comment.error) {
+      if (!comment404) {
+        router.push('/');
+        return <Box>Error</Box>;
+      }
+    }
+    if (!comment404 && !comments) {
+      return <Box>Loading...</Box>;
+    }
+  }
+
+  // その時点での最新のコード
+  let cur_code = post.code;
   const newest_code_row = newest_code.split(/\n|\r\n/).length;
 
+  const myUserId = localStorage.getItem('userId');
+  const isMyPost = myUserId === post.user_id;
+
   // for all
-  const [comment, setComment] = useState<string>('## コメント');
   const handleMarkdownEditorChange = (newComment: string): void => {
     setComment(newComment);
   };
 
-  // for 'highlight'
-  const [isHighlight, setIsHighlight] = useState<boolean>(false);
-  const [highlightFrom, setHighlightFrom] = useState<number>(1);
-  const [highlightTo, setHighlightTo] = useState<number>(1);
-
-  // for 'commit'
-  const [isCommit, setIsCommit] = useState<boolean>(false);
-  const [committingCode, setCommittingCode] = useState<string>(newest_code);
   const handleCommitEditorChange = (newCode: string): void => {
     setCommittingCode(newCode);
   };
@@ -226,19 +189,29 @@ const PostDetail: NextPage<PostInformation> = ({
     last_line: number,
     code: string
   ): void => {
-    // TODO: commentTypeに応じて処理する
     // TODO: 投稿が成功したら更新をかける (snackbarとかで通知)
-    alert('consoleに出力しています');
-    console.log('    postID : ', post_id);
-    console.log('      type : ', commentType);
-    console.log('   content : ', content);
-    console.log('first_line : ', first_line);
-    console.log(' last_line : ', last_line);
-    console.log('      code : ', code);
+    axios
+      .post(
+        `/post/${postid}/comment`,
+        {
+          type: commentType,
+          content: content,
+          first_line: first_line,
+          last_line: last_line,
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('Token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .catch((err) => {
+        console.log(err.response);
+      });
+    router.reload();
   };
-
-  // 投稿プレビューのモーダルの開閉
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   // カードのプレビュー
   const previewCard: React.FC<CommentType> = (commentType: CommentType) => {
@@ -247,12 +220,14 @@ const PostDetail: NextPage<PostInformation> = ({
         return (
           <CommentCard
             type="highlight"
-            user_id="TODO"
+            user_id={myUserId}
             content={comment}
             language={post.language}
             code={newest_code}
             first_line={highlightFrom}
             last_line={highlightTo}
+            created_at={new Date().toISOString()}
+            updated_at={new Date().toISOString()}
           />
         );
       }
@@ -260,16 +235,26 @@ const PostDetail: NextPage<PostInformation> = ({
         return (
           <CommentCard
             type="commit"
-            user_id="TODO"
+            user_id={myUserId}
             content={comment}
             language={post.language}
             code={committingCode}
             old_code={newest_code}
+            created_at={new Date().toISOString()}
+            updated_at={new Date().toISOString()}
           />
         );
       }
     }
-    return <CommentCard type="none" user_id="TODO" content={comment} />;
+    return (
+      <CommentCard
+        type="none"
+        user_id={myUserId}
+        content={comment}
+        created_at={new Date().toISOString()}
+        updated_at={new Date().toISOString()}
+      />
+    );
   };
 
   const previewModal: React.FC<Record<string, never>> = () => {
@@ -503,6 +488,8 @@ const PostDetail: NextPage<PostInformation> = ({
                     language={post.language}
                     source={post.source}
                     is_post_user={true}
+                    created_at={post.created_at}
+                    updated_at={post.updated_at}
                   />
                 </Grid>
                 {comments.map((comment, idx) => {
@@ -522,6 +509,8 @@ const PostDetail: NextPage<PostInformation> = ({
                       last_line={comment.last_line}
                       old_code={old_code}
                       is_post_user={post.user_id === comment.user_id}
+                      created_at={comment.created_at}
+                      updated_at={comment.updated_at}
                       key={idx}
                     />
                   );
@@ -534,9 +523,10 @@ const PostDetail: NextPage<PostInformation> = ({
               <TimelineItem>
                 <TimelineOppositeContent className={styles.oppositeContent} />
                 <TimelineSeparator>
-                  <Avatar className={`${styles.icon} ${styles.postUserIcon}`}>
-                    {post.user_id}
-                  </Avatar>
+                  <UserIcon
+                    className={`${styles.icon} ${styles.postUserIcon}`}
+                    user_id={post.user_id}
+                  />
                   <TimelineConnector />
                 </TimelineSeparator>
                 <TimelineContent>
@@ -548,6 +538,8 @@ const PostDetail: NextPage<PostInformation> = ({
                     language={post.language}
                     source={post.source}
                     is_post_user={true}
+                    created_at={post.created_at}
+                    updated_at={post.updated_at}
                   />
                 </TimelineContent>
               </TimelineItem>
@@ -562,14 +554,14 @@ const PostDetail: NextPage<PostInformation> = ({
                       className={styles.oppositeContent}
                     />
                     <TimelineSeparator>
-                      <Avatar
+                      <UserIcon
+                        user_id={post.user_id}
                         className={`${styles.icon} ${
                           myUserId === comment.user_id
                             ? styles.postUserIcon
                             : ''
-                        }`}>
-                        {comment.user_id}
-                      </Avatar>
+                        }`}
+                      />
                       <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
@@ -584,6 +576,8 @@ const PostDetail: NextPage<PostInformation> = ({
                         last_line={comment.last_line}
                         old_code={old_code}
                         is_post_user={post.user_id === comment.user_id}
+                        created_at={comment.created_at}
+                        updated_at={comment.updated_at}
                       />
                     </TimelineContent>
                   </TimelineItem>
