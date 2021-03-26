@@ -19,7 +19,7 @@ const DefaultHead: React.FC<Props> = (props) => {
         />
         <meta
           property="og:image"
-          content="https://github.com/openhacku-saboten/OmnisCode-frontend/blob/main/public/defaultOGP.png?raw=true"
+          content="https://user-images.githubusercontent.com/31395466/112653377-b1d72080-8e91-11eb-9a90-aa6b7c769ee1.png"
         />
         <meta property="og:site_name" content="OmnisCode" />
         <meta property="og:description" content="コードを共有するSNS" />
