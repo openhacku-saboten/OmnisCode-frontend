@@ -1,4 +1,5 @@
 import { Avatar } from '@material-ui/core';
+import Link from 'next/link';
 import useSWR from 'swr';
 import fetcher from '../utils/fetcher';
 
@@ -12,7 +13,13 @@ const UserIcon: React.FC<Props> = ({ user_id, ...other }) => {
   if (error || !data) {
     return <Avatar {...other} />;
   }
-  return <Avatar src={data.icon_url} {...other} />;
+  return (
+    <Link href={`/user/${user_id}`}>
+      <a>
+        <Avatar src={data.icon_url} {...other} />
+      </a>
+    </Link>
+  );
 };
 
 export default UserIcon;
