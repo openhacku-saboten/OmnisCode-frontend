@@ -26,7 +26,7 @@ import Router from 'next/router';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     profileArea: {
-      maxHeight: 512,
+      maxHeight: 640,
       paddingTop: 64,
       paddingBottom: 48,
     },
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: '-webkit-box',
       width: '100%',
       wordBreak: 'break-all',
-      '-webkit-line-clamp': 5,
+      '-webkit-line-clamp': 6,
       '-webkit-box-orient': 'vertical',
       overflow: 'hidden',
     },
@@ -185,8 +185,8 @@ const PostDetail: NextPage = () => {
                   defaultValue={userName}
                   label="ユーザー名"
                   onChange={(e) => setUserName(e.target.value)}
-                  error={userName.length === 0 || userName.length > 128}
-                  helperText="1文字以上128文字以下"
+                  error={userName.length === 0 || userName.length > 50}
+                  helperText="1文字以上50文字以下"
                   fullWidth
                 />
               </Grid>
@@ -209,7 +209,7 @@ const PostDetail: NextPage = () => {
             className={`${styles.submitButton} ${styles.squareButton}`}
             disabled={
               userName.length === 0 ||
-              userName.length > 128 ||
+              userName.length > 50 ||
               userProfile.length > 256
             }
             fullWidth>
