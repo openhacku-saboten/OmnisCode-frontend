@@ -36,6 +36,7 @@ import AddIcon from '@material-ui/icons/Add';
 import useSWR from 'swr';
 import fetcher from '../../utils/fetcher';
 import { useRouter } from 'next/router';
+import axios from '../../utils/axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -187,15 +188,28 @@ const PostDetail: NextPage = () => {
     last_line: number,
     code: string
   ): void => {
-    // TODO: commentTypeに応じて処理する
     // TODO: 投稿が成功したら更新をかける (snackbarとかで通知)
-    alert('consoleに出力しています');
-    console.log('    postID : ', postid);
-    console.log('      type : ', commentType);
-    console.log('   content : ', content);
-    console.log('first_line : ', first_line);
-    console.log(' last_line : ', last_line);
-    console.log('      code : ', code);
+    axios
+      .post(
+        `/post/${postid}/comment`,
+        {
+          type: commentType,
+          content: content,
+          first_line: first_line,
+          last_line: last_line,
+          code: code,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('Token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .catch((err) => {
+        console.log(err.response);
+      });
+    router.reload();
   };
 
   // カードのプレビュー
