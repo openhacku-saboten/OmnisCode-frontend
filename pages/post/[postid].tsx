@@ -55,11 +55,11 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginTop: '8px',
       marginBottom: '8px',
-      width: '48px',
-      height: '48px',
+      width: '64px',
+      height: '64px',
     },
     postUserIcon: {
-      border: `3px solid ${theme.palette.secondary.main}`,
+      border: `2px solid ${theme.palette.secondary.main}`,
     },
     checkbox: {
       marginLeft: '8px',
