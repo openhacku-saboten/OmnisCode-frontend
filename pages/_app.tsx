@@ -10,12 +10,12 @@ import {
   Typography,
   Grid,
   Container,
-  Button,
   Link,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import dynamic from 'next/dynamic';
-import { BorderColor } from '@material-ui/icons';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   const DynamicComponentUserName = dynamic(() =>
@@ -24,6 +24,9 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   const DynamicComponentUserIconImage = dynamic(() =>
     import('../components/UserIconImage').then((mod) => mod.UserIconImage)
   );
+
+  const theme2 = useTheme();
+  const showTitle = useMediaQuery(theme2.breakpoints.up('sm'));
 
   return (
     <>
@@ -36,13 +39,15 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               style={{ marginRight: '2px', borderRadius: '50%', height: 64 }}
             />
           </Link>
-          <Link href="/">
-            <Typography
-              variant="h3"
-              style={{ color: '#ffffff', fontWeight: 'bold' }}>
-              OmnisCode
-            </Typography>
-          </Link>
+          {showTitle && (
+            <Link href="/">
+              <Typography
+                variant="h3"
+                style={{ color: '#ffffff', fontWeight: 'bold' }}>
+                OmnisCode
+              </Typography>
+            </Link>
+          )}
           <Grid
             container
             alignItems="center"
