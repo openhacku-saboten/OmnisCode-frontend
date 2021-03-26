@@ -106,8 +106,8 @@ const PostDetail: NextPage = () => {
   const router = useRouter();
 
   // ad-hocすぎる...
-  const id = router.asPath.split(/\?/)[0].split('/').slice(-1)[0];
-  const postid = id === '[postid]' ? 1 : id;
+  const id = router.query.postid;
+  const postid = id === undefined ? 1 : id;
 
   const theme = useTheme();
   const isXsSm = useMediaQuery(theme.breakpoints.down('sm'));
