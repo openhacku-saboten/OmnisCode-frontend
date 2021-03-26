@@ -21,7 +21,6 @@ import {
   TimelineConnector,
 } from '@material-ui/lab';
 import { NextPage } from 'next';
-import Head from 'next/head';
 import {
   makeStyles,
   createStyles,
@@ -38,6 +37,12 @@ import fetcher from '../../utils/fetcher';
 import { useRouter } from 'next/router';
 import axios from '../../utils/axios';
 import UserIcon from '../../components/UserIcon';
+
+import CustomHead from '../../components/CustomHead';
+
+import { id2ogp } from '../../utils/language';
+
+import cutHeadLines from '../../utils/cutHeadLines';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -466,11 +471,14 @@ const PostDetail: NextPage = () => {
 
   return (
     <>
+      <CustomHead
+        title={post.title}
+        postId={Number(postid)}
+        image={`https://omniscode-og-image-kaito.vercel.app/${encodeURIComponent(
+          cutHeadLines(post.code)
+        )}.jpeg?theme=tomorrow-night-blue&lang=${id2ogp(post.language)}`}
+      />
       <Box m={4}>
-        <Head>
-          <title>{post.title}</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
         <Container style={{ marginTop: '30px' }} disableGutters={isXsSm}>
           <h1 style={{ textAlign: 'center', marginBottom: '60px' }}>
             {post.title}

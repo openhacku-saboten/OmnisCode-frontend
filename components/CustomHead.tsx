@@ -11,7 +11,7 @@ const CustomHead: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
-        <title>OmnisCode</title>
+        <title>{props.title} | OmnisCode</title>
         <link rel="icon" href="/favicon.ico" />
 
         <meta property="og:title" content="OmnisCode" />

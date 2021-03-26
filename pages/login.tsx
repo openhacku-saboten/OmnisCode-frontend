@@ -11,6 +11,8 @@ import Router from 'next/router';
 
 import { firebaseConfig } from '../utils/firebaseConfig';
 
+import DefaultHead from '../components/DefaultHead';
+
 /**
  * ---API実装時に見るメモ---
  * idTokenをheadsに入れてサーバーに送信
@@ -198,22 +200,28 @@ const Login: NextPage = () => {
       });
   }
   return (
-    <Box className={styles.displayBox} borderRadius={16}>
-      <Box>
-        <Typography className={styles.omniscode} align="center" variant="h2">
-          OmnisCode
-        </Typography>
-        <Typography className={styles.description} align="center" variant="h4">
-          OmnisCodeは簡単にコードを共有できるプラットフォームです。ログインして始めましょう。
-        </Typography>
+    <>
+      <DefaultHead pageName="login" />
+      <Box className={styles.displayBox} borderRadius={16}>
+        <Box>
+          <Typography className={styles.omniscode} align="center" variant="h2">
+            OmnisCode
+          </Typography>
+          <Typography
+            className={styles.description}
+            align="center"
+            variant="h4">
+            OmnisCodeは簡単にコードを共有できるプラットフォームです。ログインして始めましょう。
+          </Typography>
+        </Box>
+        <Box className={styles.buttonWrapper}>
+          <Button className={styles.loginButton} onClick={submit}>
+            <TwitterIcon />
+            Login with Twitter
+          </Button>
+        </Box>
       </Box>
-      <Box className={styles.buttonWrapper}>
-        <Button className={styles.loginButton} onClick={submit}>
-          <TwitterIcon />
-          Login with Twitter
-        </Button>
-      </Box>
-    </Box>
+    </>
   );
 };
 

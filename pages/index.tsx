@@ -1,11 +1,12 @@
 import { Box, Container, useMediaQuery, useTheme } from '@material-ui/core';
 import { NextPage } from 'next';
-import Head from 'next/head';
 import PostCard from '../components/PostCard';
 import { Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axios';
+
+import DefaultHead from '../components/DefaultHead';
 
 const Home: NextPage = () => {
   const theme = useTheme();
@@ -43,47 +44,46 @@ const Home: NextPage = () => {
     );
 
   return (
-    <Box m={4}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Container style={{ marginTop: '30px' }}>
-        <h1>投稿一覧</h1>
-        <Box display="flex" justifyContent="center">
-          <Pagination
-            count={Math.ceil(posts.length / cardsPerPage)}
-            page={pageNum}
-            onChange={handlePageChange}
-          />
-        </Box>
-        <Grid container spacing={3} style={{ marginTop: '10px' }}>
-          {chunk(
-            posts.slice(cardsPerPage * (pageNum - 1), cardsPerPage * pageNum),
-            cardsPerRow
-          ).map((row, idx_i) => (
-            <Grid item xs={12} key={idx_i}>
-              <Grid container spacing={3}>
-                {row.map((post, idx_j) => (
-                  <Grid item xs={12} md={6} key={idx_j}>
-                    <PostCard
-                      user_id={post.user_id}
-                      post_id={post.id}
-                      title={post.title}
-                      code={post.code}
-                      language={post.language}
-                      content={post.content}
-                      source={post.source}
-                      created_at={post.created_at}
-                    />
-                  </Grid>
-                ))}
+    <>
+      <DefaultHead pageName="" />
+      <Box m={4}>
+        <Container style={{ marginTop: '30px' }}>
+          <h1>投稿一覧</h1>
+          <Box display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(posts.length / cardsPerPage)}
+              page={pageNum}
+              onChange={handlePageChange}
+            />
+          </Box>
+          <Grid container spacing={3} style={{ marginTop: '10px' }}>
+            {chunk(
+              posts.slice(cardsPerPage * (pageNum - 1), cardsPerPage * pageNum),
+              cardsPerRow
+            ).map((row, idx_i) => (
+              <Grid item xs={12} key={idx_i}>
+                <Grid container spacing={3}>
+                  {row.map((post, idx_j) => (
+                    <Grid item xs={12} md={6} key={idx_j}>
+                      <PostCard
+                        user_id={post.user_id}
+                        post_id={post.id}
+                        title={post.title}
+                        code={post.code}
+                        language={post.language}
+                        content={post.content}
+                        source={post.source}
+                        created_at={post.created_at}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </Box>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+    </>
   );
 };
 
