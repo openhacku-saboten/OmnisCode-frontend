@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Pagination } from '@material-ui/lab';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import fetcher from '../../utils/fetcher';
@@ -13,6 +13,7 @@ import {
   Container,
   Dialog,
   Grid,
+  TextField,
   Typography,
   useMediaQuery,
   useTheme,
@@ -72,6 +73,16 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 256,
       fontSize: 16,
     },
+    modalForms: {
+      padding: '40px 10%',
+    },
+    submitButton: {
+      height: '48px',
+      fontSize: '18px',
+    },
+    squareButton: {
+      borderRadius: '0px',
+    },
   })
 );
 
@@ -86,6 +97,8 @@ const PostDetail: NextPage = () => {
   const [pageNum, setPageNum] = useState(1);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string>('');
+  const [userProfile, setUserProfile] = useState<string>('');
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -100,6 +113,13 @@ const PostDetail: NextPage = () => {
 
   const res_user = useSWR(`/user/${uid}`, fetcher);
   const res_post = useSWR(`/user/${uid}/post`, fetcher);
+
+  useEffect(() => {
+    if (!res_user.error && res_user.data) {
+      setUserName(res_user.data.name);
+      setUserProfile(res_user.data.profile);
+    }
+  }, [res_user]);
 
   if (res_user.error) {
     return <>Error</>;
@@ -125,12 +145,53 @@ const PostDetail: NextPage = () => {
       [] as T[][]
     );
 
+  const updateUserProfile = (userName: string, userProfile: string): void => {
+    console.log(userName);
+    console.log(userProfile);
+  };
+
   const editProfileModal: React.FC<Record<string, never>> = () => {
     return (
       <>
         <Card className={styles.modalCard}>
           <h1>プロフィールを編集</h1>
-          <Box>hoge</Box>
+          <Container className={styles.modalForms}>
+            <Grid container direction="column" spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  defaultValue={userName}
+                  label="ユーザー名"
+                  onChange={(e) => setUserName(e.target.value)}
+                  error={userName.length === 0 || userName.length > 128}
+                  helperText="1文字以上128文字以下"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  defaultValue={userProfile}
+                  label="プロフィール"
+                  onChange={(e) => setUserProfile(e.target.value)}
+                  error={userProfile.length > 256}
+                  helperText="256文字以下"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+          </Container>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => updateUserProfile(userName, userProfile)}
+            className={`${styles.submitButton} ${styles.squareButton}`}
+            disabled={
+              userName.length === 0 ||
+              userName.length > 128 ||
+              userProfile.length > 256
+            }
+            fullWidth>
+            更新
+          </Button>
         </Card>
       </>
     );
