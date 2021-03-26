@@ -39,7 +39,7 @@ export function UserName(): JSX.Element {
         localStorage.setItem('Token', res.data.access_token);
 
         const timeSet = 12 * 60 * 60 * 1000;
-        const newlostTokenTime = nowTime + timeSet;
+        const newlostTokenTime = String(nowTime + timeSet);
         localStorage.setItem('lostTokenTime', newlostTokenTime);
       })
       .catch((e) => {
