@@ -21,15 +21,16 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     topHeader: {
       [theme.breakpoints.only('xs')]: {
-        textAlign: 'center',
         height: '256px',
       },
       [theme.breakpoints.only('sm')]: {
-        textAlign: 'center',
         height: '384px',
       },
       [theme.breakpoints.up('md')]: {
         height: '640px',
+      },
+      [theme.breakpoints.down('md')]: {
+        textAlign: 'center',
       },
     },
     firstLetter: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Home: NextPage = () => {
   const styles = useStyles();
   const theme = useTheme();
+  const isXsSmMd = useMediaQuery(theme.breakpoints.down('md'));
   const isXsSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isXs = useMediaQuery(theme.breakpoints.only('xs'));
 
@@ -126,7 +128,7 @@ const Home: NextPage = () => {
                   <Grid
                     container
                     spacing={2}
-                    justify={isXsSm ? 'center' : 'flex-start'}>
+                    justify={isXsSmMd ? 'center' : 'flex-start'}>
                     <Grid item>
                       <Button
                         href="/login"
