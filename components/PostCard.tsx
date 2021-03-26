@@ -11,6 +11,8 @@ import { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import Router from 'next/router';
 import marked from 'marked';
+import { id2ogp } from '../utils/language';
+import cutHeadLines from '../utils/cutHeadLines';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,12 +60,12 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
     },
     dummycode: {
-      display: 'flex',
-      backgroundColor: '#dddddd',
+      // display: 'flex',
+      // backgroundColor: '#dddddd',
       height: '170px', // dummyなのでad-hocに
-      textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
+      // textAlign: 'center',
+      // alignItems: 'center',
+      // justifyContent: 'center',
       [theme.breakpoints.only('xs')]: {
         marginTop: '8px',
       },
@@ -163,7 +165,14 @@ const PostCard: React.FC<Props> = (props) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box display="flex" className={styles.dummycode}>
-              DUMMY
+              <img
+                alt="code"
+                src={`https://omniscode-og-image-kaito.vercel.app/${encodeURIComponent(
+                  cutHeadLines(props.code)
+                )}.jpeg?theme=tomorrow-night-blue&lang=${id2ogp(
+                  props.language
+                )}`}
+              />
             </Box>
           </Grid>
         </Grid>
