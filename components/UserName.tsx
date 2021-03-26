@@ -46,6 +46,7 @@ export function UserName(): JSX.Element {
         console.log(e);
       });
   }
+
   if (userName) {
     return (
       <p style={{ fontSize: 'medium' }}>

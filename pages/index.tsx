@@ -4,7 +4,8 @@ import Head from 'next/head';
 import PostCard from '../components/PostCard';
 import { Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from '../utils/axios';
 
 const Home: NextPage = () => {
   const theme = useTheme();
@@ -14,21 +15,17 @@ const Home: NextPage = () => {
   const cardsPerRow = isXsSm ? 1 : 2;
   const [pageNum, setPageNum] = useState(1);
 
-  // dummy posts
-  const posts = [...Array(100)].map((_, idx) => ({
-    user_id: `user_id${('000' + (idx + 1)).slice(-3)}`,
-    title:
-      `AGC${('000' + (idx + 1)).slice(-3)}のF問題が通りません` +
-      'ん'.repeat(idx),
-    code: `#include <bits/stdc++.h>\nusing namespace std;\n#define int long long\n\nsigned main() {\n    cout << ${
-      idx + 1
-    } << endl;\n}`,
-    language: 'C++',
-    content: 'あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。'.repeat(
-      idx + 1
-    ),
-    source: 'http://example.com',
-  }));
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get('/post');
+        setPosts(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, []);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -71,11 +68,13 @@ const Home: NextPage = () => {
                   <Grid item xs={12} md={6} key={idx_j}>
                     <PostCard
                       user_id={post.user_id}
+                      post_id={post.id}
                       title={post.title}
                       code={post.code}
                       language={post.language}
                       content={post.content}
                       source={post.source}
+                      created_at={post.created_at}
                     />
                   </Grid>
                 ))}
