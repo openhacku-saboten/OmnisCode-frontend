@@ -10,6 +10,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import Router from 'next/router';
+import marked from 'marked';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: 'nowrap',
     },
     content: {
-      padding: '12px 18px 0px',
+      padding: '8px 16px 0px',
       display: '-webkit-box',
       '-webkit-line-clamp': 7,
       '-webkit-box-orient': 'vertical',
@@ -154,7 +155,11 @@ const PostCard: React.FC<Props> = (props) => {
         <Divider light />
         <Grid container>
           <Grid item xs={12} sm={6}>
-            <Box className={styles.content}>{props.content}</Box>
+            <Box className={styles.content}>
+              <span
+                dangerouslySetInnerHTML={{ __html: marked(props.content) }}
+              />
+            </Box>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box display="flex" className={styles.dummycode}>
