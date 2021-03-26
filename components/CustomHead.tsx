@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
 
-import { URL } from '../utils/cangeURL';
-
 type Props = {
   title: string;
   postId: number;
@@ -18,7 +16,10 @@ const CustomHead: React.FC<Props> = (props) => {
 
         <meta property="og:title" content="OmnisCode" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={URL + '/post/' + props.postId} />
+        <meta
+          property="og:url"
+          content={process.env.baseUrl + '/post/' + props.postId}
+        />
         <meta property="og:image" content={props.image} />
         <meta property="og:site_name" content="OmnisCode" />
         <meta property="og:description" content={props.title} />
