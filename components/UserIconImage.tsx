@@ -1,9 +1,10 @@
-import { Button } from '@material-ui/core';
+import { Button, Link } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import React from 'react';
 
 export function UserIconImage(): JSX.Element {
   const userIconImage = localStorage.getItem('userIconImage');
+  const userId = localStorage.getItem('userId');
   if (userIconImage) {
     return (
       <>
@@ -19,11 +20,13 @@ export function UserIconImage(): JSX.Element {
           }}>
           投稿
         </Button>
-        <img
-          src={userIconImage}
-          alt="画像"
-          style={{ marginRight: '10px', borderRadius: '50%' }}
-        />
+        <Link href={'/user/' + userId}>
+          <img
+            src={userIconImage}
+            alt="画像"
+            style={{ marginRight: '10px', borderRadius: '50%' }}
+          />
+        </Link>
       </>
     );
   } else {
