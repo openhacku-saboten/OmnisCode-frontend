@@ -1,7 +1,16 @@
 import { NextPage } from 'next';
-import Head from 'next/head';
 import { Grid, TextField, Button } from '@material-ui/core';
 import React from 'react';
+
+import CustomHead from '../components/CustomHead';
+import DefaultHead from '../components/DefaultHead';
+
+/**
+ * CustomHeadは記事詳細ページ専用のコンポーネントです。
+ * ->使い方 35行目を参照
+ * DefaultHeadはその他のページで使うコンポーネントです。
+ * ->ベースURL以下のURLパラメータをpageNameに入れてください
+ */
 
 const Signup: NextPage = () => {
   //登録ボタンが押されたときの処理
@@ -26,20 +35,12 @@ const Signup: NextPage = () => {
   }
   return (
     <>
-      <Head>
-        <title>OmnisCode</title>
-        <link rel="icon" href="/favicon.ico" />
-
-        <meta property="og:title" content="OmnisCode" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ocode.one" />
-        <meta property="og:image" content="https://sample.png" />
-        <meta property="og:site_name" content="OmnisCode" />
-        <meta
-          property="og:description"
-          content="OmnisCode | コードを共有するSNS"
-        />
-      </Head>
+      {/* <CustomHead
+        title="記事のタイトルを入れる"
+        postId={1}
+        image="OGP画像のパスが入ります。"
+      /> */}
+      <DefaultHead pageName="sinup" />
       <Grid
         container
         alignItems="center"
