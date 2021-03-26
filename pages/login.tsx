@@ -111,7 +111,7 @@ const Login: NextPage = () => {
 
         //トークンが更新される(無効になる)であろう時刻
         const timeSet = 12 * 60 * 60 * 1000;
-        const lostTokenTime = new Date().getTime() + timeSet;
+        const lostTokenTime = String(new Date().getTime() + timeSet);
         console.log('lostTokenTime : ' + lostTokenTime);
 
         // ローカルストレージにrefreshTokenを保存
@@ -171,8 +171,7 @@ const Login: NextPage = () => {
             console.log('Error msg : ' + error.response.data.message);
             if (
               error.response.data.message == 'twitter id is already used' ||
-              error.response.data.message == 'user already exists' ||
-              error.response.data.message == 'Unauthorized'
+              error.response.data.message == 'user already exists'
             ) {
               console.log('すでにログイン済みです。');
               window.alert('ログインしました。');
