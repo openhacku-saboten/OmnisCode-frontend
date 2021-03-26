@@ -1,6 +1,8 @@
 import { firebaseConfig } from '../utils/firebaseConfig';
 import axios from '../utils/axios';
 import firebase from 'firebase/app';
+import React from 'react';
+import { Link, Typography } from '@material-ui/core';
 
 export function UserName(): JSX.Element {
   const userName = localStorage.getItem('userName');
@@ -49,15 +51,24 @@ export function UserName(): JSX.Element {
 
   if (userName) {
     return (
-      <p style={{ fontSize: 'medium' }}>
-        <a href={'/user/' + userId}>{userName}</a>
-      </p>
+      <Link href={'/user/' + userId}>
+        <Typography
+          style={{
+            fontSize: 'medium',
+            textDecoration: 'none !important',
+            color: '#ffffff',
+          }}>
+          {userName}
+        </Typography>
+      </Link>
     );
   } else {
     return (
-      <p style={{ fontSize: 'medium' }}>
-        <a href="/login">ログイン</a>
-      </p>
+      <Link href="/login">
+        <Typography style={{ fontSize: 'medium', color: '#ffffff' }}>
+          ログイン
+        </Typography>
+      </Link>
     );
   }
 }

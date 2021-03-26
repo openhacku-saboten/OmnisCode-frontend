@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -10,10 +10,12 @@ import {
   Typography,
   Grid,
   Container,
+  Button,
+  Link,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-
 import dynamic from 'next/dynamic';
+import { BorderColor } from '@material-ui/icons';
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   const DynamicComponentUserName = dynamic(() =>
@@ -25,12 +27,25 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" elevation={0}>
         <Toolbar>
-          <Typography variant="h4">OmnisCode</Typography>
+          <Link href="/">
+            <img
+              src="https://user-images.githubusercontent.com/31395466/112653377-b1d72080-8e91-11eb-9a90-aa6b7c769ee1.png"
+              alt="画像"
+              style={{ marginRight: '2px', borderRadius: '50%', height: 64 }}
+            />
+          </Link>
+          <Link href="/">
+            <Typography
+              variant="h3"
+              style={{ color: '#ffffff', fontWeight: 'bold' }}>
+              OmnisCode
+            </Typography>
+          </Link>
           <Grid
             container
-            alignItems="flex-start"
+            alignItems="center"
             justify="flex-end"
             direction="row">
             <IconButton
