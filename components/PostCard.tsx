@@ -7,12 +7,12 @@ import {
   Grid,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { useState, useEffect } from 'react';
-import axios from '../utils/axios';
 import Router from 'next/router';
 import marked from 'marked';
 import { id2ogp } from '../utils/language';
 import cutHeadLines from '../utils/cutHeadLines';
+import useSWR from 'swr';
+import fetcher from '../utils/fetcher';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,14 +90,6 @@ type Props = {
   created_at: string;
 };
 
-type GetUserById = {
-  id: string;
-  name: string;
-  twitter_id: string;
-  profile: string;
-  icon_url: string;
-};
-
 const zeroPadding = (s: number, len: number): string => {
   return ('0'.repeat(len) + s).slice(-len);
 };
@@ -105,23 +97,60 @@ const zeroPadding = (s: number, len: number): string => {
 const PostCard: React.FC<Props> = (props) => {
   const styles = useStyles();
 
-  const [userInfo, setUserInfo] = useState<GetUserById>({
-    id: '',
-    name: '',
-    twitter_id: '',
-    profile: '',
-    icon_url: '',
-  });
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(`/user/${props.user_id}`);
-        setUserInfo(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, [props.user_id]);
+  const { data, error } = useSWR(`/user/${props.user_id}`, fetcher);
+  if (error) {
+    return <Box>Error</Box>;
+  }
+  if (!data) {
+    return (
+      <Card className={styles.card}>
+        <ButtonBase
+          className={styles.buttonbase}
+          onClick={() => {
+            Router.push(`/post/${props.post_id}`);
+          }}>
+          <Grid container>
+            <Grid item className={styles.header}>
+              <Grid container>
+                <Grid item>
+                  <Avatar className={styles.icon} />
+                </Grid>
+                <Grid item className={styles.username}>
+                  Loading...
+                </Grid>
+                <Grid item className={styles.postdate} />
+              </Grid>
+            </Grid>
+            <Grid item className={styles.title}>
+              {props.title}
+            </Grid>
+          </Grid>
+          <Divider light />
+          <Grid container>
+            <Grid item xs={12} sm={6}>
+              <Box className={styles.content}>
+                <span
+                  dangerouslySetInnerHTML={{ __html: marked(props.content) }}
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box display="flex" className={styles.dummycode}>
+                <img
+                  alt="code"
+                  src={`https://omniscode-og-image-kaito.vercel.app/${encodeURIComponent(
+                    cutHeadLines(props.code)
+                  )}.jpeg?theme=tomorrow-night-blue&lang=${id2ogp(
+                    props.language
+                  )}`}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </ButtonBase>
+      </Card>
+    );
+  }
 
   const created_at_date = new Date(props.created_at);
 
@@ -136,10 +165,10 @@ const PostCard: React.FC<Props> = (props) => {
           <Grid item className={styles.header}>
             <Grid container>
               <Grid item>
-                <Avatar className={styles.icon} src={userInfo.icon_url} />
+                <Avatar className={styles.icon} src={data.icon_url} />
               </Grid>
               <Grid item className={styles.username}>
-                {userInfo.name ?? ''}
+                {data.name ?? ''}
               </Grid>
               <Grid item className={styles.postdate}>
                 {zeroPadding(created_at_date.getFullYear(), 4)}-
