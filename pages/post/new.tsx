@@ -102,19 +102,22 @@ const PostNew: NextPage = () => {
     ) as HTMLInputElement;
     const inputValueTitle = inputElementTitle.value;
 
-    //URLが正しいかを判定
-    const regex = new RegExp(
-      '(https?://([\\w-]+\\.)+[\\w-]+(/[\\w- .?%&=]*)?)'
-    );
-    const flagURL = regex.test(inputValueURL);
+    //URLが入力されていたら
+    if (inputValueURL) {
+      //URLが正しいかを判定
+      const regex = new RegExp(
+        '(https?://([\\w-]+\\.)+[\\w-]+(/[\\w- .?%&=]*)?)'
+      );
+      const flagURL = regex.test(inputValueURL);
+      if (flagURL == false) {
+        window.alert('入力されたURLが不正です。');
+        return;
+      }
+    }
 
     //入力された文字をチェックする。
     if (!inputValueTitle) {
       window.alert('タイトルが入力されていません。');
-      return;
-    }
-    if (flagURL == false) {
-      window.alert('入力されたURLが不正です。');
       return;
     }
     if (code == '') {
@@ -186,7 +189,7 @@ const PostNew: NextPage = () => {
             label="タイトル"
           />
 
-          <h3>2. 競技プログラミングの問題のリンクを入力</h3>
+          <h3>2. ソースコードの出典を入力(任意)</h3>
 
           <TextField id="textareaURL" style={{ width: '100%' }} label="URL" />
 
