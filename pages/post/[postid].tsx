@@ -476,7 +476,7 @@ const PostDetail: NextPage = () => {
         postId={Number(postid)}
         image={`https://omniscode-og-image-kaito.vercel.app/${encodeURIComponent(
           cutHeadLines(post.code)
-        )}.jpeg?theme=tomorrow-night-blue&lang=${id2ogp(post.language)}`}
+        )}.jpeg?theme=gradient-dark&lang=${id2ogp(post.language)}`}
       />
       <Box m={4}>
         <Container style={{ marginTop: '30px' }} disableGutters={isXsSm}>
