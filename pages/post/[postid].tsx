@@ -37,6 +37,7 @@ import fetcher from '../../utils/fetcher';
 import { useRouter } from 'next/router';
 import axios from '../../utils/axios';
 import UserIcon from '../../components/UserIcon';
+import TwitterIcon from '@material-ui/icons/Twitter';
 
 import CustomHead from '../../components/CustomHead';
 
@@ -103,6 +104,10 @@ const useStyles = makeStyles((theme: Theme) =>
     submitButton: {
       height: '48px',
       fontSize: '18px',
+    },
+    twitterShareButton: {
+      backgroundColor: '#55ACEE',
+      color: '#FFFFFF',
     },
   })
 );
@@ -480,9 +485,25 @@ const PostDetail: NextPage = () => {
       />
       <Box m={4}>
         <Container style={{ marginTop: '30px' }} disableGutters={isXsSm}>
-          <h1 style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h1 style={{ textAlign: 'center', marginBottom: '0px' }}>
             {post.title}
           </h1>
+          <p style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <Button
+              href={`http://twitter.com/share?url=${process.env.baseUrl}${
+                router.asPath
+              }%0A&text=${
+                post.title.length > 70
+                  ? post.title.slice(0, 70) + '...'
+                  : post.title
+              }%0A&hashtags=OmnisCode`}
+              target="_blank"
+              variant="contained"
+              className={styles.twitterShareButton}
+              startIcon={<TwitterIcon />}>
+              共有する
+            </Button>
+          </p>
           {/* TODO: isXsSmならCommentCardにavatar_urlを追加する */}
           {isXsSm ? (
             <>
