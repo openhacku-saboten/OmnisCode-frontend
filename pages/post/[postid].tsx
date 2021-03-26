@@ -217,10 +217,13 @@ const PostDetail: NextPage = () => {
           },
         }
       )
+      .then((res) => {
+        console.log(res);
+        router.reload();
+      })
       .catch((err) => {
         console.log(err.response);
       });
-    router.reload();
   };
 
   // カードのプレビュー
