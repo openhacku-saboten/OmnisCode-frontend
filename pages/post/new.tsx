@@ -23,7 +23,7 @@ import Router from 'next/router';
 
 import { langs } from '../../utils/language';
 
-import DefaultHead from '../components/DefaultHead';
+import DefaultHead from '../../components/DefaultHead';
 
 const PostNew: NextPage = () => {
   const useStyles = makeStyles((theme: Theme) =>
