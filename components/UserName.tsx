@@ -2,9 +2,14 @@ import { firebaseConfig } from '../utils/firebaseConfig';
 import axios from '../utils/axios';
 import firebase from 'firebase/app';
 import React from 'react';
-import { Link, Typography } from '@material-ui/core';
+import { Link, Typography, useTheme, useMediaQuery } from '@material-ui/core';
 
 export function UserName(): JSX.Element {
+  const theme = useTheme();
+  const showName = useMediaQuery(theme.breakpoints.up('md'));
+  if (!showName) {
+    return <></>;
+  }
   const userName = localStorage.getItem('userName');
   const userId = localStorage.getItem('userId');
   const refreshToken = localStorage.getItem('refreshToken');
