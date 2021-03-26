@@ -4,6 +4,8 @@ import { Comment } from '../src/type';
 import SyntaxHighlighterWithDiff from '../components/SyntaxHighlighterWithDiff';
 import marked from 'marked';
 import zeroPadding from '../utils/zeroPadding';
+import useSWR from 'swr';
+import fetcher from '../utils/fetcher';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -52,6 +54,10 @@ interface CommentWithAvatar extends Comment {
 const CommentCard: React.FC<CommentWithAvatar> = (props) => {
   const styles = useStyles();
   const created_at_date = new Date(props.created_at);
+  const { data, error } = useSWR(`/user/${props.user_id}`, fetcher);
+  if (error) {
+    return <Card className={styles.card}>Error</Card>;
+  }
   return (
     <Card className={styles.card}>
       <Grid container direction="column">
@@ -78,11 +84,12 @@ const CommentCard: React.FC<CommentWithAvatar> = (props) => {
           <Grid container justify="flex-end" alignItems="center">
             {props.avatar_url && (
               <Grid item>
-                <Avatar src={props.avatar_url} className={styles.icon} />
+                <Avatar src={data?.icon_url} className={styles.icon} />
               </Grid>
             )}
             <Grid item className={styles.postTime}>
-              {props.user_id} さん {props.is_post_user ? ' (投稿者)' : ''} が
+              {data?.name ?? props.user_id}さん
+              {props.is_post_user ? ' (投稿者)' : ''} が{' '}
               {zeroPadding(created_at_date.getFullYear(), 4)}-
               {zeroPadding(created_at_date.getMonth() + 1, 2)}-
               {zeroPadding(created_at_date.getDate(), 2)}{' '}
