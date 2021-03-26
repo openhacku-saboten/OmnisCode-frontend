@@ -17,6 +17,8 @@ import { firebaseConfig } from '../utils/firebaseConfig';
  * userNameはtwitterのユーザー名(bodyに入れてサーバーに送信)
  * ⇒ 以上の2つの情報をサーバーに送信する
  */
+// 100行目のrefreshTokenはトークンを再発行させるために使う
+//firebaseのトークンは24時間で更新される
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -96,6 +98,25 @@ const Login: NextPage = () => {
         console.log(userName);
         // ローカルストレージにuserNameを保存
         localStorage.setItem('userName', userName);
+
+        // refreshTokenはトークンを再発行させるために使う
+        const refreshToken = user.refreshToken;
+        console.log('refreshToken : ' + refreshToken);
+        // ローカルストレージにrefreshTokenを保存
+        localStorage.setItem('refreshToken', refreshToken);
+
+        // // 現在時刻(トークンを生成させるたびに時刻を更新)を保存
+        // const getTokenTime = new Date().getTime();
+        // console.log('getTokenTime : ' + getTokenTime);
+
+        //トークンが更新される(無効になる)であろう時刻
+        //const timeSet = 12 * 60 * 60 * 1000;
+        const timeSet = 30000;
+        const lostTokenTime = new Date().getTime() + timeSet;
+        console.log('lostTokenTime : ' + lostTokenTime);
+
+        // ローカルストレージにrefreshTokenを保存
+        localStorage.setItem('lostTokenTime', lostTokenTime);
 
         // userIconImageはtwitterのアイコン画像(サーバーに送信しない)
         const userIconImage = user.photoURL;
