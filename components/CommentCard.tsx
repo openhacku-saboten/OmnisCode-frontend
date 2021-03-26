@@ -1,5 +1,10 @@
 import { Grid, Card, Divider, Avatar } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core';
+import {
+  createStyles,
+  makeStyles,
+  useTheme,
+  useMediaQuery,
+} from '@material-ui/core';
 import { Comment } from '../src/type';
 import SyntaxHighlighterWithDiff from '../components/SyntaxHighlighterWithDiff';
 import marked from 'marked';
@@ -53,6 +58,9 @@ interface CommentWithAvatar extends Comment {
 
 const CommentCard: React.FC<CommentWithAvatar> = (props) => {
   const styles = useStyles();
+  const theme = useTheme();
+  const showIcon = useMediaQuery(theme.breakpoints.down('sm'));
+
   const created_at_date = new Date(props.created_at);
   const { data, error } = useSWR(`/user/${props.user_id}`, fetcher);
   if (error) {
@@ -82,7 +90,7 @@ const CommentCard: React.FC<CommentWithAvatar> = (props) => {
         <Divider light className={styles.divider} />
         <Grid item>
           <Grid container justify="flex-end" alignItems="center">
-            {props.avatar_url && (
+            {showIcon && data?.icon_url && (
               <Grid item>
                 <Avatar src={data?.icon_url} className={styles.icon} />
               </Grid>
