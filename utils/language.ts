@@ -14,3 +14,8 @@ export const langs = [
   { id: 'javascript', title: 'JavaScript' },
   { id: 'typescript', title: 'TypeScript' },
 ];
+
+export const id2ogp = (id: string): string => {
+  if (id === 'objective-c') return 'objectivec';
+  return id;
+};
