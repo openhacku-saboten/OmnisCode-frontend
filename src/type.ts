@@ -9,6 +9,7 @@ type PartialRequire<O, K extends keyof O> = {
 export type CommentType = 'post' | 'highlight' | 'commit' | 'none';
 
 export type Comment = {
+  id?: number;
   type: CommentType;
   user_id: string;
   post_id?: number;
