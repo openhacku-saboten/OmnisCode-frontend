@@ -23,6 +23,8 @@ import Router from 'next/router';
 
 import { langs } from '../../utils/language';
 
+import DefaultHead from '../components/DefaultHead';
+
 const PostNew: NextPage = () => {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -163,20 +165,7 @@ const PostNew: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>OmnisCode</title>
-        <link rel="icon" href="/favicon.ico" />
-
-        <meta property="og:title" content="OmnisCode" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ocode.one" />
-        <meta property="og:image" content="https://sample.png" />
-        <meta property="og:site_name" content="OmnisCode" />
-        <meta
-          property="og:description"
-          content="OmnisCode | コードを共有するSNS"
-        />
-      </Head>
+      <DefaultHead pageName="post/new" />
       <Grid container alignItems="center" justify="center">
         <Grid item sm={7}>
           <h1>投稿ページ</h1>
