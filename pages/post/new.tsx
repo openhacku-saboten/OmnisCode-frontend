@@ -1,5 +1,4 @@
 import { NextPage } from 'next';
-import Head from 'next/head';
 import React, { useState } from 'react';
 
 import Editor from '@monaco-editor/react';
@@ -22,6 +21,8 @@ import axios from '../../utils/axios';
 import Router from 'next/router';
 
 import { langs } from '../../utils/language';
+
+import DefaultHead from '../../components/DefaultHead';
 
 const PostNew: NextPage = () => {
   const useStyles = makeStyles((theme: Theme) =>
@@ -152,7 +153,9 @@ const PostNew: NextPage = () => {
       .then((res) => {
         console.log(res);
         window.alert('投稿が完了しました。');
-        Router.push('/');
+        console.log(res.data.id);
+        //記事詳細ページに遷移させる
+        Router.push('/post/' + res.data.id);
       })
       .catch((error) => {
         console.log('Error : ' + JSON.stringify(error.response));
@@ -163,20 +166,7 @@ const PostNew: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>OmnisCode</title>
-        <link rel="icon" href="/favicon.ico" />
-
-        <meta property="og:title" content="OmnisCode" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ocode.one" />
-        <meta property="og:image" content="https://sample.png" />
-        <meta property="og:site_name" content="OmnisCode" />
-        <meta
-          property="og:description"
-          content="OmnisCode | コードを共有するSNS"
-        />
-      </Head>
+      <DefaultHead pageName="post/new" />
       <Grid container alignItems="center" justify="center">
         <Grid item sm={7}>
           <h1>投稿ページ</h1>
