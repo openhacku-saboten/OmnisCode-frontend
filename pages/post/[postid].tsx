@@ -587,9 +587,9 @@ const PostDetail: NextPage = () => {
                     />
                     <TimelineSeparator>
                       <UserIcon
-                        user_id={post.user_id}
+                        user_id={comment.user_id}
                         className={`${styles.icon} ${
-                          myUserId === comment.user_id
+                          post.user_id === comment.user_id
                             ? styles.postUserIcon
                             : ''
                         }`}
