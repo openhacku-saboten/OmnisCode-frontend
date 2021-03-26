@@ -12,6 +12,8 @@ services:
       - ../src:/app/src
       - ../styles:/app/styles
       - ../utils:/app/utils
+    environment:
+      - TZ=Asia/Tokyo
     ports:
       - 3000:3000
     networks:
@@ -40,6 +42,7 @@ services:
       - DB_PORT=3306
       - DB_ROOT_PASSWORD=testpass
       - GOOGLE_APPLICATION_CREDENTIALS=firebaseCredentials.json
+      - TZ=Asia/Tokyo
     volumes:
       - ../firebaseCredentials.json:/firebaseCredentials.json
     ports:
