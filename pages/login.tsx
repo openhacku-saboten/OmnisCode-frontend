@@ -112,7 +112,7 @@ const Login: NextPage = () => {
         // console.log('getTokenTime : ' + getTokenTime);
 
         //トークンが更新される(無効になる)であろう時刻
-        const timeSet = 60 * 60 * 900;
+        const timeSet = 60 * 60 * 500;
         const lostTokenTime = String(new Date().getTime() + timeSet);
         console.log('lostTokenTime : ' + lostTokenTime);
 
