@@ -157,6 +157,7 @@ const PostDetail: NextPage = () => {
         `/user`,
         {
           name: userName,
+          twitter_id: userData.twitter_id,
           profile: userProfile,
         },
         {
