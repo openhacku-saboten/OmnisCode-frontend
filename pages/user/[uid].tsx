@@ -23,6 +23,8 @@ import { Comment } from '../../src/type';
 import axios from '../../utils/axios';
 import Router from 'next/router';
 
+import DefaultHead from '../../components/DefaultHead';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     profileArea: {
@@ -223,6 +225,7 @@ const PostDetail: NextPage = () => {
 
   return (
     <>
+      <DefaultHead pageName={'user/' + userData.id} />
       <Container style={{ marginTop: '30px', marginBottom: '60px' }}>
         <Box className={styles.profileArea}>
           <Avatar
