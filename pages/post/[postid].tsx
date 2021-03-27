@@ -135,7 +135,8 @@ const PostDetail: NextPage = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const post = res_post.data;
-  const comment404 = res_comment.error?.response?.statusText === 'Not Found';
+  const comment404 =
+    res_comment.error?.response?.data?.message === 'comment is not found';
   const comments = useMemo(() => (comment404 ? [] : res_comment.data), [
     comment404,
     res_comment,
