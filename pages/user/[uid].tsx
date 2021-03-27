@@ -117,7 +117,8 @@ const PostDetail: NextPage = () => {
 
   const res_user = useSWR(`/user/${uid}`, fetcher);
   const res_post = useSWR(`/user/${uid}/post`, fetcher);
-  const post404 = res_post.error?.response?.statusText === 'Not Found';
+  const post404 =
+    res_post.error?.response?.data?.message === 'post is not found';
 
   useEffect(() => {
     if (!res_user.error && res_user.data) {
