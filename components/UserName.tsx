@@ -45,7 +45,7 @@ export function UserName(): JSX.Element {
         //ローカルストレージにTokenを保存(自動更新)
         localStorage.setItem('Token', res.data.access_token);
 
-        const timeSet = 12 * 60 * 60 * 1000;
+        const timeSet = 60 * 60 * 500;
         const newlostTokenTime = String(nowTime + timeSet);
         localStorage.setItem('lostTokenTime', newlostTokenTime);
       })
