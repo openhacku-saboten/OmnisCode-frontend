@@ -496,11 +496,11 @@ const PostDetail: NextPage = () => {
             <Button
               href={`http://twitter.com/share?url=${process.env.baseUrl}${
                 router.asPath
-              }%0A&text=${
+              }%0A&text=${encodeURIComponent(
                 post.title.length > 70
                   ? post.title.slice(0, 70) + '...'
                   : post.title
-              }%0A&hashtags=OmnisCode`}
+              )}%0A&hashtags=OmnisCode`}
               target="_blank"
               variant="contained"
               className={styles.twitterShareButton}
