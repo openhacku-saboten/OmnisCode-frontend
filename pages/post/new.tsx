@@ -231,7 +231,7 @@ const PostNew: NextPage = () => {
             width="100%"
             height="60vh"
             defaultLanguage="markdown"
-            defaultValue="# マークダウンで記述できます。"
+            defaultValue="<!-- マークダウンで記述できます -->"
           />
 
           <Modal
