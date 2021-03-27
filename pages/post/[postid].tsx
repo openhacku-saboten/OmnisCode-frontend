@@ -126,7 +126,7 @@ const PostDetail: NextPage = () => {
   const res_post = useSWR(`/post/${postid}`, fetcher);
   const res_comment = useSWR(`/post/${postid}/comment`, fetcher);
 
-  const [comment, setComment] = useState<string>('## コメント');
+  const [comment, setComment] = useState<string>('<!-- コメント -->');
   const [isHighlight, setIsHighlight] = useState<boolean>(false);
   const [highlightFrom, setHighlightFrom] = useState<number>(1);
   const [highlightTo, setHighlightTo] = useState<number>(1);
