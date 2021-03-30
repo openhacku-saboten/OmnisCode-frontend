@@ -21,9 +21,6 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   const DynamicComponentUserName = dynamic(() =>
     import('../components/UserName').then((mod) => mod.UserName)
   );
-  const DynamicComponentUserIconImage = dynamic(() =>
-    import('../components/UserIconImage').then((mod) => mod.UserIconImage)
-  );
 
   const theme2 = useTheme();
   const showTitle = useMediaQuery(theme2.breakpoints.up('sm'));
@@ -58,8 +55,6 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               color="inherit">
-              {/* ログイン済みならtwitterアイコンを表示 / ログインしていなかったら人アイコン*/}
-              <DynamicComponentUserIconImage />
               {/* ログイン済みならtwitterの名前を表示 / ログインしていなかったらゲストユーザー*/}
               <DynamicComponentUserName />
             </IconButton>
